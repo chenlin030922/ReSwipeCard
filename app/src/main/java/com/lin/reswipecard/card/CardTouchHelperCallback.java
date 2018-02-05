@@ -72,9 +72,7 @@ public class CardTouchHelperCallback<T> extends SogouItemTouchHelper.Callback {
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
         // 移除 onTouchListener,否则触摸滑动会乱了
-        if (viewHolder.itemView instanceof SwipeTouchLayout) {
-            ((SwipeTouchLayout) viewHolder.itemView).setSwipeTouchListener(null);
-        }
+        viewHolder.itemView.setOnTouchListener(null);
         int layoutPosition = viewHolder.getLayoutPosition();
         T remove = mList.remove(layoutPosition);
         mList.add(remove);
@@ -151,14 +149,7 @@ public class CardTouchHelperCallback<T> extends SogouItemTouchHelper.Callback {
     //调整拨离系数
     @Override
     public float getSwipeThreshold(RecyclerView.ViewHolder viewHolder) {
-//        if (isTopViewCenterInHorizontal(viewHolder.itemView)) {
-//            return Float.MAX_VALUE;
-//        }
         return 0.1f;
-    }
-
-    public boolean isTopViewCenterInHorizontal(View topView) {
-        return Math.abs(topView.getY()) > Math.abs(topView.getX());
     }
 
     @Override

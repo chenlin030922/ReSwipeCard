@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 
 /**
@@ -66,17 +67,14 @@ public class CardLayoutManager extends RecyclerView.LayoutManager {
                     view.setScaleY(1 - position * CardConfig.DEFAULT_SCALE);
                     view.setTranslationY(position * view.getMeasuredHeight() / CardConfig.DEFAULT_TRANSLATE_Y);
                 } else {
-                    if (view instanceof SwipeTouchLayout) {
-                        ((SwipeTouchLayout) view).setSwipeTouchListener(mSwipeTouchListener);
-
-                    }
+                    view.setOnTouchListener(mOnTouchListener);
                 }
 
             }
         } else {
             // 当数据源个数小于或等于最大显示数时
             for (int position = itemCount - 1; position >= 0; position--) {
-                View view = (SwipeTouchLayout) recycler.getViewForPosition(position);
+                View view = recycler.getViewForPosition(position);
                 addView(view);
                 measureChildWithMargins(view, 0, 0);
                 int widthSpace = getWidth() - getDecoratedMeasuredWidth(view);
@@ -91,30 +89,37 @@ public class CardLayoutManager extends RecyclerView.LayoutManager {
                     view.setScaleY(1 - position * CardConfig.DEFAULT_SCALE);
                     view.setTranslationY(position * view.getMeasuredHeight() / CardConfig.DEFAULT_TRANSLATE_Y);
                 } else {
-                    if (view instanceof SwipeTouchLayout) {
-                        ((SwipeTouchLayout) view).setSwipeTouchListener(mSwipeTouchListener);
-                    }
+
+                    view.setOnTouchListener(mOnTouchListener);
                 }
             }
         }
     }
 
-    private final SwipeTouchLayout.SwipeTouchListener mSwipeTouchListener = new SwipeTouchLayout.SwipeTouchListener() {
-        @Override
-        public void onTouchDown(MotionEvent event) {
 
-        }
+    private float touchDownX;
+    private final View.OnTouchListener mOnTouchListener = new View.OnTouchListener() {
 
         @Override
-        public void onTouchUp(MotionEvent event) {
-
-        }
-
-        @Override
-        public void onTouchMove(View v, MotionEvent event) {
+        public boolean onTouch(View v, MotionEvent event) {
             RecyclerView.ViewHolder childViewHolder = mRecyclerView.getChildViewHolder(v);
-            mItemTouchHelper.startSwipe(childViewHolder);
+            // 把触摸事件交给 mItemTouchHelper，让其处理卡片滑动事件
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    touchDownX = event.getX();
+                    return false;
+                case MotionEvent.ACTION_MOVE:
+                    if (Math.abs(touchDownX - event.getX()) >= ViewConfiguration.get(
+                            mRecyclerView.getContext()).getScaledTouchSlop()) {
+                        mItemTouchHelper.startSwipe(childViewHolder);
+                        return false;
+                    }
+                    return true;
+//                case MotionEvent.ACTION_UP:
+//                case MotionEvent.ACTION_CANCEL:
+//                    return v.onTouchEvent(event);
+            }
+            return v.onTouchEvent(event);
         }
     };
-
 }
