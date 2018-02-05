@@ -439,6 +439,7 @@ public class SogouItemTouchHelper extends RecyclerView.ItemDecoration
      */
     public SogouItemTouchHelper(Callback callback) {
         mCallback = callback;
+        //addCode
         attachToRecyclerView(((CardTouchHelperCallback) callback).getRecyclerView());
     }
 
@@ -1178,25 +1179,22 @@ public class SogouItemTouchHelper extends RecyclerView.ItemDecoration
         int swipeDir;
         float value = mRecyclerView.getWidth() * mCallback
                 .getSwipeThreshold(viewHolder);
-        double distance = Math.sqrt(Math.abs(mDx) * Math.abs(mDx) + Math.abs(mDy) * Math.abs(mDy));
-        if (distance > value) {
-            if ((swipeDir = checkHorizontalSwipe(viewHolder, flags)) > 0) {
-                // if swipe dir is not in original flags, it should be the relative direction
-                if ((originalFlags & swipeDir) == 0) {
-                    // convert to relative
-                    return Callback.convertToRelativeDirection(swipeDir,
-                            ViewCompat.getLayoutDirection(mRecyclerView));
-                }
+        //addCode
+        float powDx = Math.abs(mDx) * Math.abs(mDx);
+        float powDy = Math.abs(mDy) * Math.abs(mDy);
+        double distance = Math.sqrt(powDx + powDy);
+        if (distance < value) {
+            //不滑动出去
+            return 0;
+        }
+        boolean swipeVertical = powDx < powDy;
+        //垂直方向
+        if (swipeVertical) {
+            //vertical
+            //addCode
+            if ((swipeDir = checkVerticalSwipe(viewHolder, flags)) > 0) {
                 return swipeDir;
             }
-//            if ((swipeDir = checkVerticalSwipe(viewHolder, flags)) > 0) {
-//                return swipeDir;
-//            }
-        } else {
-            //注释掉，不让他去判断垂直方向，如果需要，打开就好
-//            if ((swipeDir = checkVerticalSwipe(viewHolder, flags)) > 0) {
-//                return swipeDir;
-//            }
 //            if ((swipeDir = checkHorizontalSwipe(viewHolder, flags)) > 0) {
 //                // if swipe dir is not in original flags, it should be the relative direction
 //                if ((originalFlags & swipeDir) == 0) {
@@ -1206,6 +1204,17 @@ public class SogouItemTouchHelper extends RecyclerView.ItemDecoration
 //                }
 //                return swipeDir;
 //            }
+        } else {
+            //horizontal
+            if ((swipeDir = checkHorizontalSwipe(viewHolder, flags)) > 0) {
+                // if swipe dir is not in original flags, it should be the relative direction
+                if ((originalFlags & swipeDir) == 0) {
+                    // convert to relative
+                    return Callback.convertToRelativeDirection(swipeDir,
+                            ViewCompat.getLayoutDirection(mRecyclerView));
+                }
+                return swipeDir;
+            }
         }
         return 0;
     }
@@ -1263,7 +1272,6 @@ public class SogouItemTouchHelper extends RecyclerView.ItemDecoration
                 if ((velDirFlag & flags) != 0 && velDirFlag == dirFlag &&
                         absYVelocity >= mCallback.getSwipeEscapeVelocity(mSwipeEscapeVelocity) &&
                         absYVelocity > Math.abs(xVelocity)) {
-                    Log.e("12ws", "速度判断" + mDy);
                     return velDirFlag;
                 }
             }
@@ -1271,11 +1279,9 @@ public class SogouItemTouchHelper extends RecyclerView.ItemDecoration
             final float threshold = mRecyclerView.getHeight() * mCallback
                     .getSwipeThreshold(viewHolder);
             if ((flags & dirFlag) != 0 && Math.abs(mDy) > threshold) {
-                Log.e("12ws", "位移判断" + mDy);
                 return dirFlag;
             }
         }
-        Log.e("12ws", "不滑动=" + mDy);
         return 0;
     }
 
@@ -1708,6 +1714,7 @@ public class SogouItemTouchHelper extends RecyclerView.ItemDecoration
         public float getSwipeThreshold(ViewHolder viewHolder) {
             return .5f;
         }
+
 
         /**
          * Returns the fraction that the user should move the View to be considered as it is

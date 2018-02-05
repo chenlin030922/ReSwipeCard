@@ -149,7 +149,7 @@ public class CardTouchHelperCallback<T> extends SogouItemTouchHelper.Callback {
     //调整拨离系数
     @Override
     public float getSwipeThreshold(RecyclerView.ViewHolder viewHolder) {
-        return 0.1f;
+        return 0.3f;
     }
 
     @Override

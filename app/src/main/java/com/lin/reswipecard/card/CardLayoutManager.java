@@ -98,6 +98,7 @@ public class CardLayoutManager extends RecyclerView.LayoutManager {
 
 
     private float touchDownX;
+    private float touchDownY;
     private final View.OnTouchListener mOnTouchListener = new View.OnTouchListener() {
 
         @Override
@@ -107,10 +108,14 @@ public class CardLayoutManager extends RecyclerView.LayoutManager {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     touchDownX = event.getX();
+                    touchDownY = event.getY();
                     return false;
                 case MotionEvent.ACTION_MOVE:
-                    if (Math.abs(touchDownX - event.getX()) >= ViewConfiguration.get(
-                            mRecyclerView.getContext()).getScaledTouchSlop()) {
+                    boolean needSwipe = (Math.abs(touchDownX - event.getX()) >= ViewConfiguration.get(
+                            mRecyclerView.getContext()).getScaledTouchSlop())
+                            || (Math.abs(touchDownY - event.getY()) >= ViewConfiguration.get(
+                            mRecyclerView.getContext()).getScaledTouchSlop());
+                    if (needSwipe) {
                         mItemTouchHelper.startSwipe(childViewHolder);
                         return false;
                     }
