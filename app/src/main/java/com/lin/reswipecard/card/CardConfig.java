@@ -22,7 +22,7 @@ public abstract class CardConfig {
     public abstract float getCardScale();
 
 
-    public abstract int getCardTranslateY();
+    public abstract int getCardTranslateDistance();
 
     public abstract float getCardRotateDegree();
 
@@ -71,6 +71,18 @@ public abstract class CardConfig {
      */
     public int getSwipeOutAnimDuration(){
         return -1;
+    }
+
+    /**
+     * 四种堆叠方式，默认为下
+     * ReItemTouchHelper.DOWN 下
+     * ReItemTouchHelper.UP 上
+     * ReItemTouchHelper.LEFT 左
+     * ReItemTouchHelper.RIGHT 右
+     * @return
+     */
+    public int getStackDirection(){
+        return ReItemTouchHelper.DOWN;
     }
 
 }

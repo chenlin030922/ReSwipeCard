@@ -21,8 +21,12 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support:appcompat-v7:26.1.0'
+//    implementation 'com'
     implementation 'com.android.support:recyclerview-v7:26+'
+    compile 'com.android.support:cardview-v7:26.1.0'
     testImplementation 'junit:junit:4.12'
+    compile 'com.android.support:design:26.1.0'
+    compile 'com.makeramen:roundedimageview:2.3.0'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
 }

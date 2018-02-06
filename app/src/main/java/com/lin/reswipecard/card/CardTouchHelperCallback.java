@@ -6,7 +6,6 @@ import com.lin.reswipecard.card.utils.ReItemTouchHelper;
 import android.graphics.Canvas;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 
 import java.util.List;
@@ -92,7 +91,7 @@ public class CardTouchHelperCallback<T> extends ReItemTouchHelper.Callback {
         }
         mRecyclerView.getAdapter().notifyDataSetChanged();
         if (mListener != null) {
-            mListener.onSwipedOut(viewHolder, remove, direction == ItemTouchHelper.LEFT ? CardConfig.SWIPED_LEFT : CardConfig.SWIPED_RIGHT);
+            mListener.onSwipedOut(viewHolder, remove, direction);
         }
         // 当没有数据时回调 mListener
         if (mRecyclerView.getAdapter().getItemCount() == 0) {
@@ -112,23 +111,23 @@ public class CardTouchHelperCallback<T> extends ReItemTouchHelper.Callback {
                             float dX, float dY, int actionState, boolean isCurrentlyActive) {
         super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
         View itemView = viewHolder.itemView;
-        if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
+        if (actionState == ReItemTouchHelper.ACTION_STATE_SWIPE) {
             float ratio;
             float ratioX = dX / getXThreshold(recyclerView);
             int direction;
             if (Math.abs(dX) > Math.abs(dY)) {
                 ratio = ratioX;
                 if (dX > 0) {
-                    direction = ItemTouchHelper.RIGHT;
+                    direction = ReItemTouchHelper.RIGHT;
                 } else {
-                    direction = ItemTouchHelper.LEFT;
+                    direction = ReItemTouchHelper.LEFT;
                 }
             } else {
                 ratio = dY / getYThreshold(recyclerView);
                 if (dY > 0) {
-                    direction = ItemTouchHelper.DOWN;
+                    direction = ReItemTouchHelper.DOWN;
                 } else {
-                    direction = ItemTouchHelper.UP;
+                    direction = ReItemTouchHelper.UP;
                 }
             }
             // ratio 最大为 1 或 -1
@@ -153,7 +152,21 @@ public class CardTouchHelperCallback<T> extends ReItemTouchHelper.Callback {
                     View view = recyclerView.getChildAt(position);
                     view.setScaleX(scale);
                     view.setScaleY(scale);
-                    view.setTranslationY((index - Math.abs(ratio)) * itemView.getMeasuredHeight() / mConfig.getCardTranslateY());
+                    switch (mConfig.getStackDirection()) {
+                        case ReItemTouchHelper.UP:
+                            view.setTranslationY(-(index - Math.abs(ratio)) * itemView.getMeasuredHeight() / mConfig.getCardTranslateDistance());
+                            break;
+                        case ReItemTouchHelper.RIGHT:
+                            view.setTranslationX((index - Math.abs(ratio)) * itemView.getMeasuredWidth() / mConfig.getCardTranslateDistance());
+                            break;
+                        case ReItemTouchHelper.LEFT:
+                            view.setTranslationX(-(index - Math.abs(ratio)) * itemView.getMeasuredWidth() / mConfig.getCardTranslateDistance());
+                            break;
+                        case ReItemTouchHelper.DOWN:
+                            view.setTranslationY((index - Math.abs(ratio)) * itemView.getMeasuredHeight() / mConfig.getCardTranslateDistance());
+                        default:
+                            break;
+                    }
                 }
             } else {
                 // 当数据源个数小于或等于最大显示数时
@@ -163,17 +176,28 @@ public class CardTouchHelperCallback<T> extends ReItemTouchHelper.Callback {
                     float scale = 1 - index * defaultScale + Math.abs(ratio) * defaultScale;
                     view.setScaleX(scale);
                     view.setScaleY(scale);
-                    view.setTranslationY((index - Math.abs(ratio)) * itemView.getMeasuredHeight() / mConfig.getCardTranslateY());
-//                    if (position == 0) {
-//                        view.setAlpha(ratio);
-//                    }
+                    switch (mConfig.getStackDirection()) {
+                        case ReItemTouchHelper.UP:
+                            view.setTranslationY(-(index - Math.abs(ratio)) * itemView.getMeasuredHeight() / mConfig.getCardTranslateDistance());
+                            break;
+                        case ReItemTouchHelper.RIGHT:
+                            view.setTranslationX((index - Math.abs(ratio)) * itemView.getMeasuredWidth() / mConfig.getCardTranslateDistance());
+                            break;
+                        case ReItemTouchHelper.LEFT:
+                            view.setTranslationX(-(index - Math.abs(ratio)) * itemView.getMeasuredWidth() / mConfig.getCardTranslateDistance());
+                            break;
+                        case ReItemTouchHelper.DOWN:
+                            view.setTranslationY((index - Math.abs(ratio)) * itemView.getMeasuredHeight() / mConfig.getCardTranslateDistance());
+                        default:
+                            break;
+                    }
                 }
             }
             if (mListener != null) {
                 if (ratio != 0) {
-                    mListener.onSwiping(viewHolder, ratio, direction);
+                    mListener.onSwiping(viewHolder, dX, dY, direction);
                 } else {
-                    mListener.onSwiping(viewHolder, ratio, CardConfig.SWIPING_NONE);
+                    mListener.onSwiping(viewHolder, dX, dY, CardConfig.SWIPING_NONE);
                 }
             }
         }
@@ -211,6 +235,4 @@ public class CardTouchHelperCallback<T> extends ReItemTouchHelper.Callback {
     private float getYThreshold(RecyclerView recyclerView) {
         return recyclerView.getHeight() * 0.4f;
     }
-
-
 }

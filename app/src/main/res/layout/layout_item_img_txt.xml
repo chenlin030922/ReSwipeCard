@@ -2,6 +2,8 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="300dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="5dp"
     android:layout_height="360dp">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"

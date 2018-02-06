@@ -19,10 +19,11 @@ public class CardLayoutManager extends RecyclerView.LayoutManager {
     private final RecyclerView mRecyclerView;
     private final ReItemTouchHelper mItemTouchHelper;
     private CardConfig mConfig;
-    public CardLayoutManager(@NonNull ReItemTouchHelper itemTouchHelper,CardConfig cardConfig) {
+
+    public CardLayoutManager(@NonNull ReItemTouchHelper itemTouchHelper, CardConfig cardConfig) {
         this.mRecyclerView = itemTouchHelper.getRecyclerView();
         this.mItemTouchHelper = itemTouchHelper;
-        mConfig=cardConfig;
+        mConfig = cardConfig;
     }
 
 
@@ -32,13 +33,13 @@ public class CardLayoutManager extends RecyclerView.LayoutManager {
     }
 
     @Override
-    public void onLayoutChildren( RecyclerView.Recycler recycler, RecyclerView.State state) {
+    public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
         detachAndScrapAttachedViews(recycler);
         int itemCount = getItemCount();
         // 当数据源个数大于最大显示数时
         // TODO: 2018/2/6 修改默认item
-        int showCount=mConfig.getShowCount();
-        float defaultScale=mConfig.getCardScale();
+        int showCount = mConfig.getShowCount();
+        float defaultScale = mConfig.getCardScale();
         if (itemCount > showCount) {
             for (int position = showCount; position >= 0; position--) {
                 View view = recycler.getViewForPosition(position);
@@ -54,11 +55,39 @@ public class CardLayoutManager extends RecyclerView.LayoutManager {
                 if (position == showCount) {
                     view.setScaleX(1 - (position - 1) * defaultScale);
                     view.setScaleY(1 - (position - 1) * defaultScale);
-                    view.setTranslationY((position - 1) * view.getMeasuredHeight() / mConfig.getCardTranslateY());
+                    switch (mConfig.getStackDirection()) {
+                        case ReItemTouchHelper.UP:
+                            view.setTranslationY(-(position - 1) * view.getMeasuredHeight() / mConfig.getCardTranslateDistance());
+                            break;
+                        case ReItemTouchHelper.RIGHT:
+                            view.setTranslationX((position - 1) * view.getMeasuredWidth() / mConfig.getCardTranslateDistance());
+                            break;
+                        case ReItemTouchHelper.LEFT:
+                            view.setTranslationX(-(position - 1) * view.getMeasuredWidth() / mConfig.getCardTranslateDistance());
+                            break;
+                        case ReItemTouchHelper.DOWN:
+                            view.setTranslationY((position - 1) * view.getMeasuredHeight() / mConfig.getCardTranslateDistance());
+                        default:
+                            break;
+                    }
                 } else if (position > 0) {
                     view.setScaleX(1 - position * defaultScale);
                     view.setScaleY(1 - position * defaultScale);
-                    view.setTranslationY(position * view.getMeasuredHeight() / mConfig.getCardTranslateY());
+                    switch (mConfig.getStackDirection()) {
+                        case ReItemTouchHelper.UP:
+                            view.setTranslationY(-position * view.getMeasuredHeight() / mConfig.getCardTranslateDistance());
+                            break;
+                        case ReItemTouchHelper.RIGHT:
+                            view.setTranslationX(position * view.getMeasuredWidth() / mConfig.getCardTranslateDistance());
+                            break;
+                        case ReItemTouchHelper.LEFT:
+                            view.setTranslationX(-position * view.getMeasuredWidth() / mConfig.getCardTranslateDistance());
+                            break;
+                        case ReItemTouchHelper.DOWN:
+                            view.setTranslationY(position * view.getMeasuredHeight() / mConfig.getCardTranslateDistance());
+                        default:
+                            break;
+                    }
                 } else {
                     view.setOnTouchListener(mOnTouchListener);
                 }
@@ -79,7 +108,7 @@ public class CardLayoutManager extends RecyclerView.LayoutManager {
                 if (position > 0) {
                     view.setScaleX(1 - position * defaultScale);
                     view.setScaleY(1 - position * defaultScale);
-                    view.setTranslationY(position * view.getMeasuredHeight() / mConfig.getCardTranslateY());
+                    view.setTranslationY(position * view.getMeasuredHeight() / mConfig.getCardTranslateDistance());
                 } else {
 
                     view.setOnTouchListener(mOnTouchListener);

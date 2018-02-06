@@ -34,7 +34,7 @@ public final class DefaultCardConfig extends CardConfig {
     }
 
     @Override
-    public int getCardTranslateY() {
+    public int getCardTranslateDistance() {
         return DEFAULT_TRANSLATE_Y;
     }
 
