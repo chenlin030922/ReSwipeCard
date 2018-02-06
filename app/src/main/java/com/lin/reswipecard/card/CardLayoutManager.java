@@ -39,11 +39,11 @@ public class CardLayoutManager extends RecyclerView.LayoutManager {
             for (int position = CardConfig.DEFAULT_SHOW_ITEM; position >= 0; position--) {
                 View view = recycler.getViewForPosition(position);
                 addView(view);
-                if (position == CardConfig.DEFAULT_SHOW_ITEM) {
-                    view.setAlpha(0);
-                } else {
-                    view.setAlpha(1);
-                }
+//                if (position == CardConfig.DEFAULT_SHOW_ITEM) {
+//                    view.setAlpha(0);
+//                } else {
+//                    view.setAlpha(1);
+//                }
                 measureChildWithMargins(view, 0, 0);
                 int widthSpace = getWidth() - getDecoratedMeasuredWidth(view);
                 int heightSpace = getHeight() - getDecoratedMeasuredHeight(view);
@@ -120,9 +120,6 @@ public class CardLayoutManager extends RecyclerView.LayoutManager {
                         return false;
                     }
                     return true;
-//                case MotionEvent.ACTION_UP:
-//                case MotionEvent.ACTION_CANCEL:
-//                    return v.onTouchEvent(event);
             }
             return v.onTouchEvent(event);
         }

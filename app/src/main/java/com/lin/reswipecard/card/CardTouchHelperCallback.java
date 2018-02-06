@@ -71,7 +71,6 @@ public class CardTouchHelperCallback<T> extends SogouItemTouchHelper.Callback {
 
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-        // 移除 onTouchListener,否则触摸滑动会乱了
         viewHolder.itemView.setOnTouchListener(null);
         int layoutPosition = viewHolder.getLayoutPosition();
         T remove = mList.remove(layoutPosition);
@@ -99,21 +98,24 @@ public class CardTouchHelperCallback<T> extends SogouItemTouchHelper.Callback {
         super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
         View itemView = viewHolder.itemView;
         if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
-//            float value =;
-            float ratio = dX / getThreshold(recyclerView, viewHolder);
+            float ratio;
+            if (Math.abs(dX) > Math.abs(dY)) {
+                ratio = dX / getThreshold(recyclerView, viewHolder);
+            } else {
+                ratio = dY / getThreshold(recyclerView, viewHolder);
+            }
             // ratio 最大为 1 或 -1
             if (ratio > 1) {
                 ratio = 1;
             } else if (ratio < -1) {
                 ratio = -1;
             }
-
-            itemView.setRotation(ratio * CardConfig.DEFAULT_ROTATE_DEGREE);
+            itemView.setRotation((dX / getThreshold(recyclerView, viewHolder)) * CardConfig.DEFAULT_ROTATE_DEGREE);
             int childCount = recyclerView.getChildCount();
             // 当数据源个数大于最大显示数时
             if (childCount > CardConfig.DEFAULT_SHOW_ITEM) {
-                View lastView = recyclerView.getChildAt(0);
-                lastView.setAlpha(Math.abs(ratio));
+//                View lastView = recyclerView.getChildAt(0);
+//                lastView.setAlpha(Math.abs(ratio));
                 for (int position = 1; position < childCount - 1; position++) {
                     int index = childCount - position - 1;
                     float scale = 1 - index * CardConfig.DEFAULT_SCALE + Math.abs(ratio) * CardConfig.DEFAULT_SCALE;
@@ -131,9 +133,9 @@ public class CardTouchHelperCallback<T> extends SogouItemTouchHelper.Callback {
                     view.setScaleX(scale);
                     view.setScaleY(scale);
                     view.setTranslationY((index - Math.abs(ratio)) * itemView.getMeasuredHeight() / CardConfig.DEFAULT_TRANSLATE_Y);
-                    if (position == 0) {
-                        view.setAlpha(ratio);
-                    }
+//                    if (position == 0) {
+//                        view.setAlpha(ratio);
+//                    }
                 }
             }
             if (mListener != null) {
