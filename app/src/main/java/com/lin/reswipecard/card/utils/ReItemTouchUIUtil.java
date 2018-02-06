@@ -21,42 +21,42 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 /**
- * Utility class for {@link SogouItemTouchHelper} which handles item transformations for different
+ * Utility class for {@link ReItemTouchHelper} which handles item transformations for different
  * API versions.
  * <p/>
- * This class has methods that map to {@link SogouItemTouchHelper.Callback}'s drawing methods. Default
- * implementations in {@link SogouItemTouchHelper.Callback} call these methods with
- * {@link RecyclerView.ViewHolder#itemView} and {@link SogouItemTouchUIUtil} makes necessary changes
- * on the View depending on the API level. You can access the instance of {@link SogouItemTouchUIUtil}
- * via {@link SogouItemTouchHelper.Callback#getDefaultUIUtil()} and call its methods with the children
+ * This class has methods that map to {@link ReItemTouchHelper.Callback}'s drawing methods. Default
+ * implementations in {@link ReItemTouchHelper.Callback} call these methods with
+ * {@link RecyclerView.ViewHolder#itemView} and {@link ReItemTouchUIUtil} makes necessary changes
+ * on the View depending on the API level. You can access the instance of {@link ReItemTouchUIUtil}
+ * via {@link ReItemTouchHelper.Callback#getDefaultUIUtil()} and call its methods with the children
  * of ViewHolder that you want to apply default effects.
  *
- * @see SogouItemTouchHelper.Callback#getDefaultUIUtil()
+ * @see ReItemTouchHelper.Callback#getDefaultUIUtil()
  */
-public interface SogouItemTouchUIUtil {
+public interface ReItemTouchUIUtil {
 
     /**
-     * The default implementation for {@link SogouItemTouchHelper.Callback#onChildDraw(Canvas,
+     * The default implementation for {@link ReItemTouchHelper.Callback#onChildDraw(Canvas,
      * RecyclerView, RecyclerView.ViewHolder, float, float, int, boolean)}
      */
     void onDraw(Canvas c, RecyclerView recyclerView, View view,
                 float dX, float dY, int actionState, boolean isCurrentlyActive);
 
     /**
-     * The default implementation for {@link SogouItemTouchHelper.Callback#onChildDrawOver(Canvas,
+     * The default implementation for {@link ReItemTouchHelper.Callback#onChildDrawOver(Canvas,
      * RecyclerView, RecyclerView.ViewHolder, float, float, int, boolean)}
      */
     void onDrawOver(Canvas c, RecyclerView recyclerView, View view,
                     float dX, float dY, int actionState, boolean isCurrentlyActive);
 
     /**
-     * The default implementation for {@link SogouItemTouchHelper.Callback#clearView(RecyclerView,
+     * The default implementation for {@link ReItemTouchHelper.Callback#clearView(RecyclerView,
      * RecyclerView.ViewHolder)}
      */
     void clearView(View view);
 
     /**
-     * The default implementation for {@link SogouItemTouchHelper.Callback#onSelectedChanged(
+     * The default implementation for {@link ReItemTouchHelper.Callback#onSelectedChanged(
      * RecyclerView.ViewHolder, int)}
      */
     void onSelected(View view);

@@ -26,7 +26,7 @@ import android.view.View;
  * Package private class to keep implementations. Putting them inside ItemTouchUIUtil makes them
  * public API, which is not desired in this case.
  */
-class SogouItemTouchUIUtilImpl {
+class ReItemTouchUIUtilImpl {
     static class Lollipop extends Honeycomb {
         @Override
         public void onDraw(Canvas c, RecyclerView recyclerView, View view,
@@ -70,7 +70,7 @@ class SogouItemTouchUIUtilImpl {
         }
     }
 
-    static class Honeycomb implements SogouItemTouchUIUtil {
+    static class Honeycomb implements ReItemTouchUIUtil {
 
         @Override
         public void clearView(View view) {
@@ -97,7 +97,7 @@ class SogouItemTouchUIUtilImpl {
         }
     }
 
-    static class Gingerbread implements SogouItemTouchUIUtil {
+    static class Gingerbread implements ReItemTouchUIUtil {
 
         private void draw(Canvas c, RecyclerView parent, View view,
                           float dX, float dY) {
@@ -120,7 +120,7 @@ class SogouItemTouchUIUtilImpl {
         @Override
         public void onDraw(Canvas c, RecyclerView recyclerView, View view,
                            float dX, float dY, int actionState, boolean isCurrentlyActive) {
-            if (actionState != SogouItemTouchHelper.ACTION_STATE_DRAG) {
+            if (actionState != ReItemTouchHelper.ACTION_STATE_DRAG) {
                 draw(c, recyclerView, view, dX, dY);
             }
         }
@@ -129,7 +129,7 @@ class SogouItemTouchUIUtilImpl {
         public void onDrawOver(Canvas c, RecyclerView recyclerView,
                                View view, float dX, float dY,
                                int actionState, boolean isCurrentlyActive) {
-            if (actionState == SogouItemTouchHelper.ACTION_STATE_DRAG) {
+            if (actionState == ReItemTouchHelper.ACTION_STATE_DRAG) {
                 draw(c, recyclerView, view, dX, dY);
             }
         }

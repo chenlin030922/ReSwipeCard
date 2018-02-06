@@ -18,11 +18,9 @@ package com.lin.reswipecard.card.utils;
 
 
 import com.lin.reswipecard.card.CardTouchHelperCallback;
-import com.lin.reswipecard.card.animation.AnimatorCompatHelper;
-import com.lin.reswipecard.card.animation.AnimatorListenerCompat;
-import com.lin.reswipecard.card.animation.AnimatorUpdateListenerCompat;
-import com.lin.reswipecard.card.animation.ValueAnimatorCompat;
 
+import android.animation.Animator;
+import android.animation.ValueAnimator;
 import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Rect;
@@ -61,7 +59,7 @@ import java.util.List;
  * <p>
  * This class is designed to work with any LayoutManager but for certain situations, it can be
  * optimized for your custom LayoutManager by extending methods in the
- * {@link SogouItemTouchHelper.Callback} class or implementing {@link SogouItemTouchHelper.ViewDropHandler}
+ * {@link ReItemTouchHelper.Callback} class or implementing {@link ReItemTouchHelper.ViewDropHandler}
  * interface in your LayoutManager.
  * <p>
  * By default, ItemTouchHelper moves the items' translateX/Y properties to reposition them. On
@@ -75,7 +73,7 @@ import java.util.List;
  * Most of the time, you only need to override <code>onChildDraw</code> but due to limitations of
  * platform prior to Honeycomb, you may need to implement <code>onChildDrawOver</code> as well.
  */
-public class SogouItemTouchHelper extends RecyclerView.ItemDecoration
+public class ReItemTouchHelper extends RecyclerView.ItemDecoration
         implements RecyclerView.OnChildAttachStateChangeListener {
 
     /**
@@ -437,7 +435,7 @@ public class SogouItemTouchHelper extends RecyclerView.ItemDecoration
      *
      * @param callback The Callback which controls the behavior of this touch helper.
      */
-    public SogouItemTouchHelper(Callback callback) {
+    public ReItemTouchHelper(Callback callback) {
         mCallback = callback;
         //addCode
         attachToRecyclerView(((CardTouchHelperCallback) callback).getRecyclerView());
@@ -616,7 +614,7 @@ public class SogouItemTouchHelper extends RecyclerView.ItemDecoration
                         prevActionState, currentTranslateX, currentTranslateY,
                         targetTranslateX, targetTranslateY) {
                     @Override
-                    public void onAnimationEnd(ValueAnimatorCompat animation) {
+                    public void onAnimationEnd(Animator animation) {
                         super.onAnimationEnd(animation);
                         if (this.mOverridden) {
                             return;
@@ -1033,14 +1031,14 @@ public class SogouItemTouchHelper extends RecyclerView.ItemDecoration
     /**
      * Starts dragging the provided ViewHolder. By default, ItemTouchHelper starts a drag when a
      * View is long pressed. You can disable that behavior by overriding
-     * {@link SogouItemTouchHelper.Callback#isLongPressDragEnabled()}.
+     * {@link ReItemTouchHelper.Callback#isLongPressDragEnabled()}.
      * <p>
      * For this method to work:
      * <ul>
      * <li>The provided ViewHolder must be a child of the RecyclerView to which this
      * ItemTouchHelper
      * is attached.</li>
-     * <li>{@link SogouItemTouchHelper.Callback} must have dragging enabled.</li>
+     * <li>{@link ReItemTouchHelper.Callback} must have dragging enabled.</li>
      * <li>There must be a previous touch event that was reported to the ItemTouchHelper
      * through RecyclerView's ItemTouchListener mechanism. As long as no other ItemTouchListener
      * grabs previous events, this should work as expected.</li>
@@ -1062,7 +1060,7 @@ public class SogouItemTouchHelper extends RecyclerView.ItemDecoration
      *
      * @param viewHolder The ViewHolder to start dragging. It must be a direct child of
      *                   RecyclerView.
-     * @see SogouItemTouchHelper.Callback#isItemViewSwipeEnabled()
+     * @see ReItemTouchHelper.Callback#isItemViewSwipeEnabled()
      */
     public void startDrag(ViewHolder viewHolder) {
         if (!mCallback.hasDragFlag(mRecyclerView, viewHolder)) {
@@ -1083,13 +1081,13 @@ public class SogouItemTouchHelper extends RecyclerView.ItemDecoration
      * Starts swiping the provided ViewHolder. By default, ItemTouchHelper starts swiping a View
      * when user swipes their finger (or mouse pointer) over the View. You can disable this
      * behavior
-     * by overriding {@link SogouItemTouchHelper.Callback}
+     * by overriding {@link ReItemTouchHelper.Callback}
      * <p>
      * For this method to work:
      * <ul>
      * <li>The provided ViewHolder must be a child of the RecyclerView to which this
      * ItemTouchHelper is attached.</li>
-     * <li>{@link SogouItemTouchHelper.Callback} must have swiping enabled.</li>
+     * <li>{@link ReItemTouchHelper.Callback} must have swiping enabled.</li>
      * <li>There must be a previous touch event that was reported to the ItemTouchHelper
      * through RecyclerView's ItemTouchListener mechanism. As long as no other ItemTouchListener
      * grabs previous events, this should work as expected.</li>
@@ -1220,6 +1218,13 @@ public class SogouItemTouchHelper extends RecyclerView.ItemDecoration
     }
 
     private int checkHorizontalSwipe(ViewHolder viewHolder, int flags) {
+        boolean isLeft = mDx < 0;
+        if (mCallback.isForbidLeftSwipeOut() && isLeft) {
+            return 0;
+        }
+        if (mCallback.isForbidRightSwipeOut() && !isLeft) {
+            return 0;
+        }
         if ((flags & (LEFT | RIGHT)) != 0) {
             final int dirFlag = mDx > 0 ? RIGHT : LEFT;
             if (mVelocityTracker != null && mActivePointerId > -1) {
@@ -1249,10 +1254,11 @@ public class SogouItemTouchHelper extends RecyclerView.ItemDecoration
     }
 
     private int checkVerticalSwipe(ViewHolder viewHolder, int flags) {
-        /**
-         * 这里加了代码，一律返回0，禁止掉上下的滑动swipe判断事件
-         */
-        if (mCallback.isForbidUpAndDownSwipe()) {
+        boolean isUp = mDy < 0;
+        if (mCallback.isForbidUpSwipeOut() && isUp) {
+            return 0;
+        }
+        if (mCallback.isForbidDownSwipeOut() && (!isUp)) {
             return 0;
         }
         /*****************************
@@ -1327,12 +1333,12 @@ public class SogouItemTouchHelper extends RecyclerView.ItemDecoration
 
     /**
      * An interface which can be implemented by LayoutManager for better integration with
-     * {@link SogouItemTouchHelper}.
+     * {@link ReItemTouchHelper}.
      */
     public static interface ViewDropHandler {
 
         /**
-         * Called by the {@link SogouItemTouchHelper} after a View is dropped over another View.
+         * Called by the {@link ReItemTouchHelper} after a View is dropped over another View.
          * <p>
          * A LayoutManager should implement this interface to get ready for the upcoming move
          * operation.
@@ -1394,7 +1400,7 @@ public class SogouItemTouchHelper extends RecyclerView.ItemDecoration
                 ((START | END) << DIRECTION_FLAG_COUNT) |
                 ((START | END) << (2 * DIRECTION_FLAG_COUNT));
 
-        private static final SogouItemTouchUIUtil sUICallback;
+        private static final ReItemTouchUIUtil sUICallback;
 
         private static final int ABS_HORIZONTAL_DIR_FLAGS = LEFT | RIGHT |
                 ((LEFT | RIGHT) << DIRECTION_FLAG_COUNT) |
@@ -1424,18 +1430,18 @@ public class SogouItemTouchHelper extends RecyclerView.ItemDecoration
 
         static {
             if (Build.VERSION.SDK_INT >= 21) {
-                sUICallback = new SogouItemTouchUIUtilImpl.Lollipop();
+                sUICallback = new ReItemTouchUIUtilImpl.Lollipop();
             } else if (Build.VERSION.SDK_INT >= 11) {
-                sUICallback = new SogouItemTouchUIUtilImpl.Honeycomb();
+                sUICallback = new ReItemTouchUIUtilImpl.Honeycomb();
             } else {
-                sUICallback = new SogouItemTouchUIUtilImpl.Gingerbread();
+                sUICallback = new ReItemTouchUIUtilImpl.Gingerbread();
             }
         }
 
         /**
-         * Returns the {@link SogouItemTouchUIUtil} that is used by the {@link Callback} class for
+         * Returns the {@link ReItemTouchUIUtil} that is used by the {@link Callback} class for
          * visual
-         * changes on Views in response to user interactions. {@link SogouItemTouchUIUtil} has different
+         * changes on Views in response to user interactions. {@link ReItemTouchUIUtil} has different
          * implementations for different platform versions.
          * <p>
          * By default, {@link Callback} applies these changes on
@@ -1470,9 +1476,9 @@ public class SogouItemTouchHelper extends RecyclerView.ItemDecoration
          *     }
          * </pre>
          *
-         * @return The {@link SogouItemTouchUIUtil} instance that is used by the {@link Callback}
+         * @return The {@link ReItemTouchUIUtil} instance that is used by the {@link Callback}
          */
-        public static SogouItemTouchUIUtil getDefaultUIUtil() {
+        public static ReItemTouchUIUtil getDefaultUIUtil() {
             return sUICallback;
         }
 
@@ -1548,7 +1554,7 @@ public class SogouItemTouchHelper extends RecyclerView.ItemDecoration
          * This flag is composed of 3 sets of 8 bits, where first 8 bits are for IDLE state, next
          * 8 bits are for SWIPE state and third 8 bits are for DRAG state.
          * Each 8 bit sections can be constructed by simply OR'ing direction flags defined in
-         * {@link SogouItemTouchHelper}.
+         * {@link ReItemTouchHelper}.
          * <p>
          * For example, if you want it to allow swiping LEFT and RIGHT but only allow starting to
          * swipe by swiping RIGHT, you can return:
@@ -1568,7 +1574,19 @@ public class SogouItemTouchHelper extends RecyclerView.ItemDecoration
                                              ViewHolder viewHolder);
 
 
-        public boolean isForbidUpAndDownSwipe() {
+        public boolean isForbidUpSwipeOut() {
+            return false;
+        }
+
+        public boolean isForbidDownSwipeOut() {
+            return false;
+        }
+
+        public boolean isForbidLeftSwipeOut() {
+            return false;
+        }
+
+        public boolean isForbidRightSwipeOut() {
             return false;
         }
 
@@ -1892,9 +1910,9 @@ public class SogouItemTouchHelper extends RecyclerView.ItemDecoration
          *
          * @param viewHolder  The new ViewHolder that is being swiped or dragged. Might be null if
          *                    it is cleared.
-         * @param actionState One of {@link SogouItemTouchHelper#ACTION_STATE_IDLE},
-         *                    {@link SogouItemTouchHelper#ACTION_STATE_SWIPE} or
-         *                    {@link SogouItemTouchHelper#ACTION_STATE_DRAG}.
+         * @param actionState One of {@link ReItemTouchHelper#ACTION_STATE_IDLE},
+         *                    {@link ReItemTouchHelper#ACTION_STATE_SWIPE} or
+         *                    {@link ReItemTouchHelper#ACTION_STATE_DRAG}.
          * @see #clearView(RecyclerView, ViewHolder)
          */
         public void onSelectedChanged(ViewHolder viewHolder, int actionState) {
@@ -1983,7 +2001,7 @@ public class SogouItemTouchHelper extends RecyclerView.ItemDecoration
                     int actionState, float dX, float dY) {
             final int recoverAnimSize = recoverAnimationList.size();
             for (int i = 0; i < recoverAnimSize; i++) {
-                final SogouItemTouchHelper.RecoverAnimation anim = recoverAnimationList.get(i);
+                final ReItemTouchHelper.RecoverAnimation anim = recoverAnimationList.get(i);
                 anim.update();
                 final int count = c.save();
                 onChildDraw(c, parent, anim.mViewHolder, anim.mX, anim.mY, anim.mActionState,
@@ -2002,7 +2020,7 @@ public class SogouItemTouchHelper extends RecyclerView.ItemDecoration
                         int actionState, float dX, float dY) {
             final int recoverAnimSize = recoverAnimationList.size();
             for (int i = 0; i < recoverAnimSize; i++) {
-                final SogouItemTouchHelper.RecoverAnimation anim = recoverAnimationList.get(i);
+                final ReItemTouchHelper.RecoverAnimation anim = recoverAnimationList.get(i);
                 final int count = c.save();
                 onChildDrawOver(c, parent, anim.mViewHolder, anim.mX, anim.mY, anim.mActionState,
                         false);
@@ -2335,7 +2353,7 @@ public class SogouItemTouchHelper extends RecyclerView.ItemDecoration
         }
     }
 
-    private class RecoverAnimation implements AnimatorListenerCompat {
+    private class RecoverAnimation implements Animator.AnimatorListener {
 
         final float mStartDx;
 
@@ -2349,7 +2367,7 @@ public class SogouItemTouchHelper extends RecyclerView.ItemDecoration
 
         final int mActionState;
 
-        private final ValueAnimatorCompat mValueAnimator;
+        private final ValueAnimator mValueAnimator;
 
         final int mAnimationType;
 
@@ -2376,11 +2394,11 @@ public class SogouItemTouchHelper extends RecyclerView.ItemDecoration
             mStartDy = startDy;
             mTargetX = targetX;
             mTargetY = targetY;
-            mValueAnimator = AnimatorCompatHelper.emptyValueAnimator();
+            mValueAnimator = ValueAnimator.ofFloat(0f, 1f);
             mValueAnimator.addUpdateListener(
-                    new AnimatorUpdateListenerCompat() {
+                    new ValueAnimator.AnimatorUpdateListener() {
                         @Override
-                        public void onAnimationUpdate(ValueAnimatorCompat animation) {
+                        public void onAnimationUpdate(ValueAnimator animation) {
                             setFraction(animation.getAnimatedFraction());
                         }
                     });
@@ -2424,12 +2442,12 @@ public class SogouItemTouchHelper extends RecyclerView.ItemDecoration
         }
 
         @Override
-        public void onAnimationStart(ValueAnimatorCompat animation) {
+        public void onAnimationStart(Animator animation) {
 
         }
 
         @Override
-        public void onAnimationEnd(ValueAnimatorCompat animation) {
+        public void onAnimationEnd(Animator animation) {
             if (!mEnded) {
                 mViewHolder.setIsRecyclable(true);
             }
@@ -2438,13 +2456,13 @@ public class SogouItemTouchHelper extends RecyclerView.ItemDecoration
         }
 
         @Override
-        public void onAnimationCancel(ValueAnimatorCompat animation) {
+        public void onAnimationCancel(Animator animation) {
             setFraction(1f); //make sure we recover the view's state.
             mViewHolder.itemView.setLayerType(View.LAYER_TYPE_NONE, null);
         }
 
         @Override
-        public void onAnimationRepeat(ValueAnimatorCompat animation) {
+        public void onAnimationRepeat(Animator animation) {
 
         }
     }

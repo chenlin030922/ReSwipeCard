@@ -1,7 +1,7 @@
 package com.lin.reswipecard.card;
 
 
-import com.lin.reswipecard.card.utils.SogouItemTouchHelper;
+import com.lin.reswipecard.card.utils.ReItemTouchHelper;
 
 import android.graphics.Canvas;
 import android.support.annotation.NonNull;
@@ -15,15 +15,17 @@ import java.util.List;
  * @author yuqirong
  */
 
-public class CardTouchHelperCallback<T> extends SogouItemTouchHelper.Callback {
+public class CardTouchHelperCallback<T> extends ReItemTouchHelper.Callback {
 
     private final RecyclerView mRecyclerView;
     private final List<T> mList;
     private OnSwipeCardListener<T> mListener;
+    private CardConfig mConfig;
 
-    public CardTouchHelperCallback(@NonNull RecyclerView recyclerView, @NonNull List<T> dataList) {
+    public CardTouchHelperCallback(@NonNull RecyclerView recyclerView, @NonNull List<T> dataList, CardConfig cardConfig) {
         this.mRecyclerView = recyclerView;
         this.mList = dataList;
+        mConfig = cardConfig;
     }
 
     public CardTouchHelperCallback(@NonNull RecyclerView recyclerView, @NonNull List<T> dataList, OnSwipeCardListener<T> listener) {
@@ -50,13 +52,12 @@ public class CardTouchHelperCallback<T> extends SogouItemTouchHelper.Callback {
 
     @Override
     public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-        int dragFlags = 0;
         int swipeFlags = 0;
         RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
         if (layoutManager instanceof CardLayoutManager) {
-            swipeFlags = ItemTouchHelper.DOWN | ItemTouchHelper.UP | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
+            swipeFlags = mConfig.getSwipeDirection();
         }
-        return makeMovementFlags(dragFlags, swipeFlags);
+        return makeMovementFlags(0, swipeFlags);
     }
 
     @Override
@@ -65,8 +66,27 @@ public class CardTouchHelperCallback<T> extends SogouItemTouchHelper.Callback {
     }
 
     @Override
-    public boolean isForbidUpAndDownSwipe() {
-        return false;
+    public boolean isForbidUpSwipeOut() {
+        return (mConfig.couldSwipeOutDirection() & ReItemTouchHelper.UP)
+                != ReItemTouchHelper.UP;
+    }
+
+    @Override
+    public boolean isForbidDownSwipeOut() {
+        return (mConfig.couldSwipeOutDirection() &
+                ReItemTouchHelper.DOWN) != ReItemTouchHelper.DOWN;
+    }
+
+    @Override
+    public boolean isForbidLeftSwipeOut() {
+        return (mConfig.couldSwipeOutDirection() &
+                ReItemTouchHelper.LEFT) != ReItemTouchHelper.LEFT;
+    }
+
+    @Override
+    public boolean isForbidRightSwipeOut() {
+        return (mConfig.couldSwipeOutDirection() &
+                ReItemTouchHelper.RIGHT) != ReItemTouchHelper.RIGHT;
     }
 
     @Override
@@ -110,29 +130,30 @@ public class CardTouchHelperCallback<T> extends SogouItemTouchHelper.Callback {
             } else if (ratio < -1) {
                 ratio = -1;
             }
-            itemView.setRotation((dX / getThreshold(recyclerView, viewHolder)) * CardConfig.DEFAULT_ROTATE_DEGREE);
+            itemView.setRotation((dX / getThreshold(recyclerView, viewHolder)) * mConfig.getCardRotateDegree());
             int childCount = recyclerView.getChildCount();
             // 当数据源个数大于最大显示数时
-            if (childCount > CardConfig.DEFAULT_SHOW_ITEM) {
+            float defaultScale = mConfig.getCardScale();
+            if (childCount > mConfig.getShowCount()) {
 //                View lastView = recyclerView.getChildAt(0);
 //                lastView.setAlpha(Math.abs(ratio));
                 for (int position = 1; position < childCount - 1; position++) {
                     int index = childCount - position - 1;
-                    float scale = 1 - index * CardConfig.DEFAULT_SCALE + Math.abs(ratio) * CardConfig.DEFAULT_SCALE;
+                    float scale = 1 - index * defaultScale + Math.abs(ratio) * defaultScale;
                     View view = recyclerView.getChildAt(position);
                     view.setScaleX(scale);
                     view.setScaleY(scale);
-                    view.setTranslationY((index - Math.abs(ratio)) * itemView.getMeasuredHeight() / CardConfig.DEFAULT_TRANSLATE_Y);
+                    view.setTranslationY((index - Math.abs(ratio)) * itemView.getMeasuredHeight() / mConfig.getCardTranslateY());
                 }
             } else {
                 // 当数据源个数小于或等于最大显示数时
                 for (int position = 0; position < childCount - 1; position++) {
                     int index = childCount - position - 1;
                     View view = recyclerView.getChildAt(position);
-                    float scale = 1 - index * CardConfig.DEFAULT_SCALE + Math.abs(ratio) * CardConfig.DEFAULT_SCALE;
+                    float scale = 1 - index * defaultScale + Math.abs(ratio) * defaultScale;
                     view.setScaleX(scale);
                     view.setScaleY(scale);
-                    view.setTranslationY((index - Math.abs(ratio)) * itemView.getMeasuredHeight() / CardConfig.DEFAULT_TRANSLATE_Y);
+                    view.setTranslationY((index - Math.abs(ratio)) * itemView.getMeasuredHeight() / mConfig.getCardTranslateY());
 //                    if (position == 0) {
 //                        view.setAlpha(ratio);
 //                    }
@@ -140,7 +161,7 @@ public class CardTouchHelperCallback<T> extends SogouItemTouchHelper.Callback {
             }
             if (mListener != null) {
                 if (ratio != 0) {
-                    mListener.onSwiping(viewHolder, ratio, ratio < 0 ? CardConfig.SWIPING_LEFT : CardConfig.SWIPING_RIGHT);
+                    mListener.onSwiping(viewHolder, ratio, ratio < 0 ? CardConfig.SWIPED_LEFT : CardConfig.SWIPED_RIGHT);
                 } else {
                     mListener.onSwiping(viewHolder, ratio, CardConfig.SWIPING_NONE);
                 }

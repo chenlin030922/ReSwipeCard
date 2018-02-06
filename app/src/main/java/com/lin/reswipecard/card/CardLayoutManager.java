@@ -1,7 +1,7 @@
 package com.lin.reswipecard.card;
 
 
-import com.lin.reswipecard.card.utils.SogouItemTouchHelper;
+import com.lin.reswipecard.card.utils.ReItemTouchHelper;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -17,9 +17,9 @@ import android.view.ViewGroup;
 public class CardLayoutManager extends RecyclerView.LayoutManager {
 
     private final RecyclerView mRecyclerView;
-    private final SogouItemTouchHelper mItemTouchHelper;
+    private final ReItemTouchHelper mItemTouchHelper;
 
-    public CardLayoutManager(@NonNull SogouItemTouchHelper itemTouchHelper) {
+    public CardLayoutManager(@NonNull ReItemTouchHelper itemTouchHelper) {
         this.mRecyclerView = itemTouchHelper.getRecyclerView();
         this.mItemTouchHelper = itemTouchHelper;
     }
@@ -35,41 +35,29 @@ public class CardLayoutManager extends RecyclerView.LayoutManager {
         detachAndScrapAttachedViews(recycler);
         int itemCount = getItemCount();
         // 当数据源个数大于最大显示数时
-        if (itemCount > CardConfig.DEFAULT_SHOW_ITEM) {
-            for (int position = CardConfig.DEFAULT_SHOW_ITEM; position >= 0; position--) {
+        if (itemCount > DefaultCardConfig.DEFAULT_SHOW_ITEM) {
+            for (int position = DefaultCardConfig.DEFAULT_SHOW_ITEM; position >= 0; position--) {
                 View view = recycler.getViewForPosition(position);
                 addView(view);
-//                if (position == CardConfig.DEFAULT_SHOW_ITEM) {
-//                    view.setAlpha(0);
-//                } else {
-//                    view.setAlpha(1);
-//                }
                 measureChildWithMargins(view, 0, 0);
                 int widthSpace = getWidth() - getDecoratedMeasuredWidth(view);
                 int heightSpace = getHeight() - getDecoratedMeasuredHeight(view);
-                // recyclerview 布局
-                /**
-                 *   layoutDecoratedWithMargins(view, widthSpace / 2, 0,
-                 widthSpace / 2 + getDecoratedMeasuredWidth(view),
-                 heightSpace / 2 + getDecoratedMeasuredHeight(view)); 这里去掉上边距
-                 */
                 layoutDecoratedWithMargins(view,
-                        widthSpace / 2, 0,
+                        widthSpace / 2, heightSpace / 2,
                         widthSpace / 2 + getDecoratedMeasuredWidth(view),
                         heightSpace / 2 + getDecoratedMeasuredHeight(view));
 
-                if (position == CardConfig.DEFAULT_SHOW_ITEM) {
-                    view.setScaleX(1 - (position - 1) * CardConfig.DEFAULT_SCALE);
-                    view.setScaleY(1 - (position - 1) * CardConfig.DEFAULT_SCALE);
-                    view.setTranslationY((position - 1) * view.getMeasuredHeight() / CardConfig.DEFAULT_TRANSLATE_Y);
+                if (position == DefaultCardConfig.DEFAULT_SHOW_ITEM) {
+                    view.setScaleX(1 - (position - 1) * DefaultCardConfig.DEFAULT_SCALE);
+                    view.setScaleY(1 - (position - 1) * DefaultCardConfig.DEFAULT_SCALE);
+                    view.setTranslationY((position - 1) * view.getMeasuredHeight() / DefaultCardConfig.DEFAULT_TRANSLATE_Y);
                 } else if (position > 0) {
-                    view.setScaleX(1 - position * CardConfig.DEFAULT_SCALE);
-                    view.setScaleY(1 - position * CardConfig.DEFAULT_SCALE);
-                    view.setTranslationY(position * view.getMeasuredHeight() / CardConfig.DEFAULT_TRANSLATE_Y);
+                    view.setScaleX(1 - position * DefaultCardConfig.DEFAULT_SCALE);
+                    view.setScaleY(1 - position * DefaultCardConfig.DEFAULT_SCALE);
+                    view.setTranslationY(position * view.getMeasuredHeight() / DefaultCardConfig.DEFAULT_TRANSLATE_Y);
                 } else {
                     view.setOnTouchListener(mOnTouchListener);
                 }
-
             }
         } else {
             // 当数据源个数小于或等于最大显示数时
@@ -85,9 +73,9 @@ public class CardLayoutManager extends RecyclerView.LayoutManager {
                         heightSpace / 2 + getDecoratedMeasuredHeight(view));
 
                 if (position > 0) {
-                    view.setScaleX(1 - position * CardConfig.DEFAULT_SCALE);
-                    view.setScaleY(1 - position * CardConfig.DEFAULT_SCALE);
-                    view.setTranslationY(position * view.getMeasuredHeight() / CardConfig.DEFAULT_TRANSLATE_Y);
+                    view.setScaleX(1 - position * DefaultCardConfig.DEFAULT_SCALE);
+                    view.setScaleY(1 - position * DefaultCardConfig.DEFAULT_SCALE);
+                    view.setTranslationY(position * view.getMeasuredHeight() / DefaultCardConfig.DEFAULT_TRANSLATE_Y);
                 } else {
 
                     view.setOnTouchListener(mOnTouchListener);
