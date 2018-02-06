@@ -12,7 +12,7 @@ public class CardOperator<T> {
     private RecyclerView mRecyclerView;
     private OnSwipeCardListener<T> mOnSwipeCardListener;
 
-    public CardOperator(CardConfig cardConfig,
+     CardOperator(CardConfig cardConfig,
                         RecyclerView recyclerView,
                         OnSwipeCardListener<T> onSwipeCardListener) {
         mCardConfig = cardConfig;
@@ -24,6 +24,7 @@ public class CardOperator<T> {
             throw new IllegalArgumentException("you must call attachRecyclerView() from Builder");
         }
         mOnSwipeCardListener = onSwipeCardListener;
+        startAssembled();
     }
 
     private void startAssembled(){

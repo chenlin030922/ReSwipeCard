@@ -58,4 +58,9 @@ public final class DefaultCardConfig extends CardConfig {
                 | CardConfig.SWIPED_RIGHT
                 | CardConfig.SWIPED_LEFT;
     }
+
+    @Override
+    public float getSwipeThreshold() {
+        return 0.3f;
+    }
 }

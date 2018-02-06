@@ -39,13 +39,6 @@ public class CardTouchHelperCallback<T> extends ReItemTouchHelper.Callback {
         return mRecyclerView;
     }
 
-    private <T> T checkIsNull(T t) {
-        if (t == null) {
-            throw new NullPointerException();
-        }
-        return t;
-    }
-
     public void setOnSwipedListener(OnSwipeCardListener<T> mListener) {
         this.mListener = mListener;
     }
@@ -94,10 +87,12 @@ public class CardTouchHelperCallback<T> extends ReItemTouchHelper.Callback {
         viewHolder.itemView.setOnTouchListener(null);
         int layoutPosition = viewHolder.getLayoutPosition();
         T remove = mList.remove(layoutPosition);
-        mList.add(remove);
+        if (mConfig.isLoopCard()) {
+            mList.add(remove);
+        }
         mRecyclerView.getAdapter().notifyDataSetChanged();
         if (mListener != null) {
-            mListener.onHorizationSwiped(viewHolder, remove, direction == ItemTouchHelper.LEFT ? CardConfig.SWIPED_LEFT : CardConfig.SWIPED_RIGHT);
+            mListener.onSwipedOut(viewHolder, remove, direction == ItemTouchHelper.LEFT ? CardConfig.SWIPED_LEFT : CardConfig.SWIPED_RIGHT);
         }
         // 当没有数据时回调 mListener
         if (mRecyclerView.getAdapter().getItemCount() == 0) {
@@ -119,10 +114,22 @@ public class CardTouchHelperCallback<T> extends ReItemTouchHelper.Callback {
         View itemView = viewHolder.itemView;
         if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
             float ratio;
+            float ratioX = dX / getXThreshold(recyclerView);
+            int direction;
             if (Math.abs(dX) > Math.abs(dY)) {
-                ratio = dX / getThreshold(recyclerView, viewHolder);
+                ratio = ratioX;
+                if (dX > 0) {
+                    direction = ItemTouchHelper.RIGHT;
+                } else {
+                    direction = ItemTouchHelper.LEFT;
+                }
             } else {
-                ratio = dY / getThreshold(recyclerView, viewHolder);
+                ratio = dY / getYThreshold(recyclerView);
+                if (dY > 0) {
+                    direction = ItemTouchHelper.DOWN;
+                } else {
+                    direction = ItemTouchHelper.UP;
+                }
             }
             // ratio 最大为 1 或 -1
             if (ratio > 1) {
@@ -130,13 +137,16 @@ public class CardTouchHelperCallback<T> extends ReItemTouchHelper.Callback {
             } else if (ratio < -1) {
                 ratio = -1;
             }
-            itemView.setRotation((dX / getThreshold(recyclerView, viewHolder)) * mConfig.getCardRotateDegree());
+            if (ratioX > 1) {
+                ratioX = 1;
+            } else if (ratioX < -1) {
+                ratioX = -1;
+            }
+            itemView.setRotation(ratioX * mConfig.getCardRotateDegree());
             int childCount = recyclerView.getChildCount();
             // 当数据源个数大于最大显示数时
             float defaultScale = mConfig.getCardScale();
             if (childCount > mConfig.getShowCount()) {
-//                View lastView = recyclerView.getChildAt(0);
-//                lastView.setAlpha(Math.abs(ratio));
                 for (int position = 1; position < childCount - 1; position++) {
                     int index = childCount - position - 1;
                     float scale = 1 - index * defaultScale + Math.abs(ratio) * defaultScale;
@@ -161,7 +171,7 @@ public class CardTouchHelperCallback<T> extends ReItemTouchHelper.Callback {
             }
             if (mListener != null) {
                 if (ratio != 0) {
-                    mListener.onSwiping(viewHolder, ratio, ratio < 0 ? CardConfig.SWIPED_LEFT : CardConfig.SWIPED_RIGHT);
+                    mListener.onSwiping(viewHolder, ratio, direction);
                 } else {
                     mListener.onSwiping(viewHolder, ratio, CardConfig.SWIPING_NONE);
                 }
@@ -172,7 +182,20 @@ public class CardTouchHelperCallback<T> extends ReItemTouchHelper.Callback {
     //调整拨离系数
     @Override
     public float getSwipeThreshold(RecyclerView.ViewHolder viewHolder) {
-        return 0.3f;
+        return mConfig.getSwipeThreshold();
+    }
+
+    @Override
+    public boolean enableHardWare() {
+        return mConfig.enableHardWare();
+    }
+
+    @Override
+    public int getDefaultSwipeAnimationDuration() {
+        if (mConfig.getSwipeOutAnimDuration() != -1) {
+            return mConfig.getSwipeOutAnimDuration();
+        }
+        return super.getDefaultSwipeAnimationDuration();
     }
 
     @Override
@@ -181,8 +204,12 @@ public class CardTouchHelperCallback<T> extends ReItemTouchHelper.Callback {
         viewHolder.itemView.setRotation(0f);
     }
 
-    private float getThreshold(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+    private float getXThreshold(RecyclerView recyclerView) {
         return recyclerView.getWidth() * 0.4f;
+    }
+
+    private float getYThreshold(RecyclerView recyclerView) {
+        return recyclerView.getHeight() * 0.4f;
     }
 
 

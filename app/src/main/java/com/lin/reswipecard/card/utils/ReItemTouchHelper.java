@@ -372,7 +372,7 @@ public class ReItemTouchHelper extends RecyclerView.ItemDecoration
                 case MotionEvent.ACTION_MOVE: {
                     // Find the index of the active pointer and fetch its position
                     if (activePointerIndex >= 0) {
-                        if (viewHolder.itemView.getLayerType() != View.LAYER_TYPE_HARDWARE) {
+                        if (mCallback.enableHardWare() && viewHolder.itemView.getLayerType() != View.LAYER_TYPE_HARDWARE) {
                             viewHolder.itemView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
                         }
                         updateDxDy(event, mSelectedFlags, activePointerIndex);
@@ -639,9 +639,9 @@ public class ReItemTouchHelper extends RecyclerView.ItemDecoration
                         }
                     }
                 };
-                final long duration = mCallback.getAnimationDuration(mRecyclerView, animationType,
-                        targetTranslateX - currentTranslateX, targetTranslateY - currentTranslateY);
-                rv.setDuration(duration * 2);//根据ue的交互，修改为两倍
+//                final long duration = mCallback.getAnimationDuration(mRecyclerView, animationType,
+//                        targetTranslateX - currentTranslateX, targetTranslateY - currentTranslateY);
+                rv.setDuration(mCallback.getDefaultSwipeAnimationDuration());
                 mRecoverAnimations.add(rv);
                 rv.start();
                 preventLayout = true;
@@ -684,7 +684,7 @@ public class ReItemTouchHelper extends RecyclerView.ItemDecoration
                         anim.mViewHolder.getAdapterPosition() != RecyclerView.NO_POSITION) {
                     final RecyclerView.ItemAnimator animator = mRecyclerView.getItemAnimator();
                     // if animator is running or we have other active recover animations, we try
-                    // not to call onHorizationSwiped because DefaultItemAnimator is not good at merging
+                    // not to call onSwipedOut because DefaultItemAnimator is not good at merging
                     // animations. Instead, we wait and batch.
                     if ((animator == null || !animator.isRunning(null))
                             && !hasRunningRecoverAnim()) {
@@ -1590,6 +1590,10 @@ public class ReItemTouchHelper extends RecyclerView.ItemDecoration
             return false;
         }
 
+        public int getDefaultSwipeAnimationDuration() {
+            return DEFAULT_SWIPE_ANIMATION_DURATION;
+        }
+
         /**
          * Converts a given set of flags to absolution direction which means {@link #START} and
          * {@link #END} are replaced with {@link #LEFT} and {@link #RIGHT} depending on the layout
@@ -2062,6 +2066,11 @@ public class ReItemTouchHelper extends RecyclerView.ItemDecoration
             sUICallback.clearView(viewHolder.itemView);
         }
 
+
+        public boolean enableHardWare() {
+            return true;
+        }
+
         /**
          * Called by ItemTouchHelper on RecyclerView's onDraw callback.
          * <p>
@@ -2211,7 +2220,7 @@ public class ReItemTouchHelper extends RecyclerView.ItemDecoration
      * A simple wrapper to the default Callback which you can construct with drag and swipe
      * directions and this class will handle the flag callbacks. You should still override onMove
      * or
-     * onHorizationSwiped depending on your use case.
+     * onSwipedOut depending on your use case.
      * <p>
      * <pre>
      * ItemTouchHelper mIth = new ItemTouchHelper(
@@ -2224,7 +2233,7 @@ public class ReItemTouchHelper extends RecyclerView.ItemDecoration
      *             // move item in `fromPos` to `toPos` in adapter.
      *             return true;// true if moved, false otherwise
      *         }
-     *         public void onHorizationSwiped(ViewHolder viewHolder, int direction) {
+     *         public void onSwipedOut(ViewHolder viewHolder, int direction) {
      *             // remove from adapter
      *         }
      * });
@@ -2452,13 +2461,17 @@ public class ReItemTouchHelper extends RecyclerView.ItemDecoration
                 mViewHolder.setIsRecyclable(true);
             }
             mEnded = true;
-            mViewHolder.itemView.setLayerType(View.LAYER_TYPE_NONE, null);
+            if (mCallback.enableHardWare()) {
+                mViewHolder.itemView.setLayerType(View.LAYER_TYPE_NONE, null);
+            }
         }
 
         @Override
         public void onAnimationCancel(Animator animation) {
             setFraction(1f); //make sure we recover the view's state.
-            mViewHolder.itemView.setLayerType(View.LAYER_TYPE_NONE, null);
+            if (mCallback.enableHardWare()) {
+                mViewHolder.itemView.setLayerType(View.LAYER_TYPE_NONE, null);
+            }
         }
 
         @Override

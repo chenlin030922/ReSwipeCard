@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
         List<CardBean> list = CardMaker.initCards();
         CardTouchHelperCallback helperCallback = new CardTouchHelperCallback(mRecyclerView, list, new DefaultCardConfig());
         ReItemTouchHelper helper = new ReItemTouchHelper(helperCallback);
-        CardLayoutManager layoutManager = new CardLayoutManager(helper);
+        CardLayoutManager layoutManager = new CardLayoutManager(helper, new DefaultCardConfig());
         mRecyclerView.setLayoutManager(layoutManager);
         CardAdapter cardAdapter = new CardAdapter(list);
         mRecyclerView.setAdapter(cardAdapter);

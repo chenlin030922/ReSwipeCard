@@ -40,4 +40,37 @@ public abstract class CardConfig {
      */
     public abstract int couldSwipeOutDirection();
 
+
+    /**
+     * {@link ReItemTouchHelper.Callback.getSwipeThreshold(ViewHolder viewHolder)}
+     *
+     * @return
+     */
+    public abstract float getSwipeThreshold();
+
+
+    /**
+     * 默认硬件加速
+     * @return
+     */
+    public boolean enableHardWare() {
+        return true;
+    }
+
+    /**
+     * 默认k循环播放
+     * @return
+     */
+    public boolean isLoopCard() {
+        return true;
+    }
+
+    /**
+     * 手势抬起后的动画执行时间
+     * @return
+     */
+    public int getSwipeOutAnimDuration(){
+        return -1;
+    }
+
 }

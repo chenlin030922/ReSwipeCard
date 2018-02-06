@@ -3,7 +3,8 @@ package com.lin.reswipecard.card;
 import android.support.v7.widget.RecyclerView;
 
 /**
- * @author yuqirong
+ * Created by linchen on 2018/2/6.
+ * mail: linchen@sogou-inc.com
  */
 
 public interface OnSwipeCardListener<T> {
@@ -25,7 +26,7 @@ public interface OnSwipeCardListener<T> {
      * @param t          该滑出卡片的数据
      * @param direction  卡片滑出的方向，CardConfig.SWIPED_LEFT 为左边滑出；CardConfig.SWIPED_RIGHT 为右边滑出
      */
-    void onHorizationSwiped(RecyclerView.ViewHolder viewHolder, T t, int direction);
+    void onSwipedOut(RecyclerView.ViewHolder viewHolder, T t, int direction);
 
     /**
      * 所有的卡片全部滑出时回调
