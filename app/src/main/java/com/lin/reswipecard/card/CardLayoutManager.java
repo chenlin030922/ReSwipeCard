@@ -66,8 +66,8 @@ public class CardLayoutManager extends RecyclerView.LayoutManager {
                             view.setTranslationX(-(position - 1) * view.getMeasuredWidth() / mConfig.getCardTranslateDistance());
                             break;
                         case ReItemTouchHelper.DOWN:
-                            view.setTranslationY((position - 1) * view.getMeasuredHeight() / mConfig.getCardTranslateDistance());
                         default:
+                            view.setTranslationY((position - 1) * view.getMeasuredHeight() / mConfig.getCardTranslateDistance());
                             break;
                     }
                 } else if (position > 0) {
@@ -84,8 +84,8 @@ public class CardLayoutManager extends RecyclerView.LayoutManager {
                             view.setTranslationX(-position * view.getMeasuredWidth() / mConfig.getCardTranslateDistance());
                             break;
                         case ReItemTouchHelper.DOWN:
-                            view.setTranslationY(position * view.getMeasuredHeight() / mConfig.getCardTranslateDistance());
                         default:
+                            view.setTranslationY(position * view.getMeasuredHeight() / mConfig.getCardTranslateDistance());
                             break;
                     }
                 } else {
@@ -108,9 +108,22 @@ public class CardLayoutManager extends RecyclerView.LayoutManager {
                 if (position > 0) {
                     view.setScaleX(1 - position * defaultScale);
                     view.setScaleY(1 - position * defaultScale);
-                    view.setTranslationY(position * view.getMeasuredHeight() / mConfig.getCardTranslateDistance());
+                    switch (mConfig.getStackDirection()) {
+                        case ReItemTouchHelper.UP:
+                            view.setTranslationY(-position * view.getMeasuredHeight() / mConfig.getCardTranslateDistance());
+                            break;
+                        case ReItemTouchHelper.RIGHT:
+                            view.setTranslationX(position * view.getMeasuredWidth() / mConfig.getCardTranslateDistance());
+                            break;
+                        case ReItemTouchHelper.LEFT:
+                            view.setTranslationX(-position * view.getMeasuredWidth() / mConfig.getCardTranslateDistance());
+                            break;
+                        case ReItemTouchHelper.DOWN:
+                        default:
+                            view.setTranslationY(position * view.getMeasuredHeight() / mConfig.getCardTranslateDistance());
+                            break;
+                    }
                 } else {
-
                     view.setOnTouchListener(mOnTouchListener);
                 }
             }

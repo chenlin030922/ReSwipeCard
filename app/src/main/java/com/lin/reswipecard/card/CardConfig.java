@@ -51,6 +51,7 @@ public abstract class CardConfig {
 
     /**
      * 默认硬件加速
+     *
      * @return
      */
     public boolean enableHardWare() {
@@ -59,6 +60,7 @@ public abstract class CardConfig {
 
     /**
      * 默认k循环播放
+     *
      * @return
      */
     public boolean isLoopCard() {
@@ -66,11 +68,12 @@ public abstract class CardConfig {
     }
 
     /**
-     * 手势抬起后的动画执行时间
+     * 手势抬起后的动画执行时间,小于0则使用默认系统默认的
+     *
      * @return
      */
-    public int getSwipeOutAnimDuration(){
-        return -1;
+    public int getSwipeOutAnimDuration() {
+        return 400;
     }
 
     /**
@@ -79,9 +82,10 @@ public abstract class CardConfig {
      * ReItemTouchHelper.UP 上
      * ReItemTouchHelper.LEFT 左
      * ReItemTouchHelper.RIGHT 右
+     *
      * @return
      */
-    public int getStackDirection(){
+    public int getStackDirection() {
         return ReItemTouchHelper.DOWN;
     }
 

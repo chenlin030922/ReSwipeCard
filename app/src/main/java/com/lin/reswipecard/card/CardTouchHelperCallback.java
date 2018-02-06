@@ -163,8 +163,8 @@ public class CardTouchHelperCallback<T> extends ReItemTouchHelper.Callback {
                             view.setTranslationX(-(index - Math.abs(ratio)) * itemView.getMeasuredWidth() / mConfig.getCardTranslateDistance());
                             break;
                         case ReItemTouchHelper.DOWN:
-                            view.setTranslationY((index - Math.abs(ratio)) * itemView.getMeasuredHeight() / mConfig.getCardTranslateDistance());
                         default:
+                            view.setTranslationY((index - Math.abs(ratio)) * itemView.getMeasuredHeight() / mConfig.getCardTranslateDistance());
                             break;
                     }
                 }
@@ -187,8 +187,8 @@ public class CardTouchHelperCallback<T> extends ReItemTouchHelper.Callback {
                             view.setTranslationX(-(index - Math.abs(ratio)) * itemView.getMeasuredWidth() / mConfig.getCardTranslateDistance());
                             break;
                         case ReItemTouchHelper.DOWN:
-                            view.setTranslationY((index - Math.abs(ratio)) * itemView.getMeasuredHeight() / mConfig.getCardTranslateDistance());
                         default:
+                            view.setTranslationY((index - Math.abs(ratio)) * itemView.getMeasuredHeight() / mConfig.getCardTranslateDistance());
                             break;
                     }
                 }
@@ -216,10 +216,7 @@ public class CardTouchHelperCallback<T> extends ReItemTouchHelper.Callback {
 
     @Override
     public int getDefaultSwipeAnimationDuration() {
-        if (mConfig.getSwipeOutAnimDuration() != -1) {
-            return mConfig.getSwipeOutAnimDuration();
-        }
-        return super.getDefaultSwipeAnimationDuration();
+        return mConfig.getSwipeOutAnimDuration();
     }
 
     @Override

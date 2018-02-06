@@ -639,9 +639,13 @@ public class ReItemTouchHelper extends RecyclerView.ItemDecoration
                         }
                     }
                 };
-//                final long duration = mCallback.getAnimationDuration(mRecyclerView, animationType,
-//                        targetTranslateX - currentTranslateX, targetTranslateY - currentTranslateY);
-                rv.setDuration(mCallback.getDefaultSwipeAnimationDuration());
+                if (mCallback.getDefaultSwipeAnimationDuration() < 0) {
+                    final long duration = mCallback.getAnimationDuration(mRecyclerView, animationType,
+                            targetTranslateX - currentTranslateX, targetTranslateY - currentTranslateY);
+                    rv.setDuration(duration);
+                } else {
+                    rv.setDuration(mCallback.getDefaultSwipeAnimationDuration());
+                }
                 mRecoverAnimations.add(rv);
                 rv.start();
                 preventLayout = true;
