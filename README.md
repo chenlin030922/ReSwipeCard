@@ -11,5 +11,17 @@
 - 滑出时间控制
 - 滑动最大距离
 - 循环卡片
-- 卡片堆叠方试
+- 卡片堆叠方式
+- 卡片数量
 - 自定义滑动动画(not yet)
+
+项目中加入了RecyclerView，如果自己的项目中用到了，需要向底下一样:
+
+```java
+   compile 'lin.jerrylin0322.reswipecard:0.0.1' {
+        exclude  module: 'recyclerview-v7'
+    }
+```
+
+
+

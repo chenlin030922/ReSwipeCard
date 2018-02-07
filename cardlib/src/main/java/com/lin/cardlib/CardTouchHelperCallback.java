@@ -12,7 +12,7 @@ import java.util.List;
 
 /**
  * @author yuqirong
- * modified by linchen
+ *         modified by linchen
  */
 
 public class CardTouchHelperCallback<T> extends ReItemTouchHelper.Callback {
@@ -26,13 +26,6 @@ public class CardTouchHelperCallback<T> extends ReItemTouchHelper.Callback {
         this.mRecyclerView = recyclerView;
         this.mList = dataList;
         mConfig = cardConfig;
-    }
-
-    public CardTouchHelperCallback(@NonNull RecyclerView recyclerView, @NonNull List<T> dataList, OnSwipeCardListener<T> listener) {
-        this.mRecyclerView = (recyclerView);
-        this.mList = dataList;
-        this.mListener = listener;
-
     }
 
     public RecyclerView getRecyclerView() {
