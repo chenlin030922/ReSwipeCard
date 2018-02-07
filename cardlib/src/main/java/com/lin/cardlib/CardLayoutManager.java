@@ -11,6 +11,7 @@ import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 /**
  * @author yuqirong
+ * modified by linchen
  */
 
 public class CardLayoutManager extends RecyclerView.LayoutManager {
@@ -35,8 +36,6 @@ public class CardLayoutManager extends RecyclerView.LayoutManager {
     public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
         detachAndScrapAttachedViews(recycler);
         int itemCount = getItemCount();
-        // 当数据源个数大于最大显示数时
-        // TODO: 2018/2/6 修改默认item
         int showCount = mConfig.getShowCount();
         float defaultScale = mConfig.getCardScale();
         if (itemCount > showCount) {
@@ -92,14 +91,12 @@ public class CardLayoutManager extends RecyclerView.LayoutManager {
                 }
             }
         } else {
-            // 当数据源个数小于或等于最大显示数时
             for (int position = itemCount - 1; position >= 0; position--) {
                 View view = recycler.getViewForPosition(position);
                 addView(view);
                 measureChildWithMargins(view, 0, 0);
                 int widthSpace = getWidth() - getDecoratedMeasuredWidth(view);
                 int heightSpace = getHeight() - getDecoratedMeasuredHeight(view);
-                // recyclerview 布局
                 layoutDecoratedWithMargins(view, widthSpace / 2, heightSpace / 2,
                         widthSpace / 2 + getDecoratedMeasuredWidth(view),
                         heightSpace / 2 + getDecoratedMeasuredHeight(view));
@@ -137,7 +134,6 @@ public class CardLayoutManager extends RecyclerView.LayoutManager {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
             RecyclerView.ViewHolder childViewHolder = mRecyclerView.getChildViewHolder(v);
-            // 把触摸事件交给 mItemTouchHelper，让其处理卡片滑动事件
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     touchDownX = event.getX();

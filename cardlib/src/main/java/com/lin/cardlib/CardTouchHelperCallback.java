@@ -12,6 +12,7 @@ import java.util.List;
 
 /**
  * @author yuqirong
+ * modified by linchen
  */
 
 public class CardTouchHelperCallback<T> extends ReItemTouchHelper.Callback {
@@ -93,7 +94,6 @@ public class CardTouchHelperCallback<T> extends ReItemTouchHelper.Callback {
         if (mListener != null) {
             mListener.onSwipedOut(viewHolder, remove, direction);
         }
-        // 当没有数据时回调 mListener
         if (mRecyclerView.getAdapter().getItemCount() == 0) {
             if (mListener != null) {
                 mListener.onSwipedClear();
@@ -130,7 +130,6 @@ public class CardTouchHelperCallback<T> extends ReItemTouchHelper.Callback {
                     direction = ReItemTouchHelper.UP;
                 }
             }
-            // ratio 最大为 1 或 -1
             if (ratio > 1) {
                 ratio = 1;
             } else if (ratio < -1) {
@@ -143,7 +142,6 @@ public class CardTouchHelperCallback<T> extends ReItemTouchHelper.Callback {
             }
             itemView.setRotation(ratioX * mConfig.getCardRotateDegree());
             int childCount = recyclerView.getChildCount();
-            // 当数据源个数大于最大显示数时
             float defaultScale = mConfig.getCardScale();
             if (childCount > mConfig.getShowCount()) {
                 for (int position = 1; position < childCount - 1; position++) {
@@ -169,7 +167,6 @@ public class CardTouchHelperCallback<T> extends ReItemTouchHelper.Callback {
                     }
                 }
             } else {
-                // 当数据源个数小于或等于最大显示数时
                 for (int position = 0; position < childCount - 1; position++) {
                     int index = childCount - position - 1;
                     View view = recyclerView.getChildAt(position);
@@ -203,7 +200,6 @@ public class CardTouchHelperCallback<T> extends ReItemTouchHelper.Callback {
         }
     }
 
-    //调整拨离系数
     @Override
     public float getSwipeThreshold(RecyclerView.ViewHolder viewHolder) {
         return mConfig.getSwipeThreshold();
