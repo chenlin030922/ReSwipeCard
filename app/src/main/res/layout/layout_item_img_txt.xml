@@ -1,31 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="300dp"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:cardCornerRadius="5dp"
-    android:layout_height="360dp">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="300dp"
+              android:layout_height="360dp"
+              android:background="@drawable/shape_gray"
+              android:orientation="vertical"
+              android:paddingBottom="30dp">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                  android:layout_width="300dp"
-                  android:layout_height="360dp"
-                  android:background="@drawable/shape_gray"
-                  android:orientation="vertical">
+    <com.makeramen.roundedimageview.RoundedImageView
+        android:id="@+id/card_img"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="1dp"
+        android:layout_weight="1"
+        android:scaleType="centerCrop"
+        app:riv_corner_radius_top_right="4dp"
+        app:riv_corner_radius_top_left="4dp"/>
 
-        <ImageView
-            android:id="@+id/card_img"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginBottom="10dp"
-            android:gravity="center"
-            android:text="你才是失色"
-            android:textColor="#000000"
-            android:textSize="16sp"/>
-    </LinearLayout>
-</FrameLayout>
+    <TextView
+        android:id="@+id/card_txt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:textColor="#000000"
+        android:textSize="16sp"/>
+</LinearLayout>

@@ -1,10 +1,11 @@
 package com.lin.reswipecard;
 
-import com.lin.reswipecard.card.CardLayoutManager;
-import com.lin.reswipecard.card.CardTouchHelperCallback;
-import com.lin.reswipecard.card.DefaultCardConfig;
-import com.lin.reswipecard.card.OnSwipeCardListener;
-import com.lin.reswipecard.card.utils.ReItemTouchHelper;
+
+import com.lin.cardlib.CardLayoutManager;
+import com.lin.cardlib.CardTouchHelperCallback;
+import com.lin.cardlib.DefaultCardConfig;
+import com.lin.cardlib.OnSwipeCardListener;
+import com.lin.cardlib.utils.ReItemTouchHelper;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
