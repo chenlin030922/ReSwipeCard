@@ -60,7 +60,7 @@ public class CardConfig {
     }
 
     public int getStackDirection() {
-        return  ReItemTouchHelper.DOWN;
+        return  ReItemTouchHelper.RIGHT;
     }
 
 }
