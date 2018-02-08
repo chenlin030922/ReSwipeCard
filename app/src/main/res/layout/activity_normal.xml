@@ -4,36 +4,43 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:orientation="vertical"
-    android:layout_height="match_parent">
-        <android.support.v7.widget.RecyclerView
-            android:layout_width="200dp"
-            android:id="@+id/list"
-            android:layout_height="200dp">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-        </android.support.v7.widget.RecyclerView>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </android.support.v7.widget.RecyclerView>
+
+    <Button
+        android:id="@+id/change_type"
+        android:layout_width="100dp"
+        android:layout_height="60dp"
+        android:layout_gravity="bottom|right"
+        android:layout_marginBottom="50dp"
+        android:text="change"
+        android:visibility="gone"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_gravity="bottom"
+        android:visibility="gone">
+
         <Button
-            android:layout_width="100dp"
-            android:id="@+id/change_type"
-            android:text="change"
-            android:layout_gravity="bottom|right"
-            android:layout_marginBottom="50dp"
-            android:layout_height="60dp"/>
-        <LinearLayout
+            android:id="@+id/turn_left"
             android:layout_width="match_parent"
-            android:layout_gravity="bottom"
-            android:layout_height="50dp">
-                <Button
-                    android:layout_width="match_parent"
-                    android:id="@+id/turn_left"
-                    android:text="siwpe left"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"/>
-                <Button
-                    android:layout_width="match_parent"
-                    android:id="@+id/turn_right"
-                    android:text="siwpe right"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"/>
-        </LinearLayout>
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="siwpe left"/>
+
+        <Button
+            android:id="@+id/turn_right"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="siwpe right"/>
+    </LinearLayout>
 </FrameLayout>

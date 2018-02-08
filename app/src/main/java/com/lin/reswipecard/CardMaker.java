@@ -9,7 +9,7 @@ import java.util.List;
  */
 
 public class CardMaker {
-    public static final String U1 = "https://gss1.bdstatic.com/9vo3dSag_xI4khGkpoWK1HF6hhy/baike/w%3D400/sign=e8cdeac05182b2b7a79f38c401accb0a/f11f3a292df5e0fed0acfbc5546034a85fdf72b9.jpg";
+    public static final String U1 = "https://afremov.com/images/product/image_1675.jpeg";
     public static final String U2 = "http://img02.tooopen.com/images/20151122/tooopen_sy_149199661189.jpg";
     public static final String U3 = "http://gmimg.geimian.com/pic/2015/04/20150419_213113_920.jpg";
     public static final String U4 = "http://pic.qiantucdn.com/58pic/11/84/20/04s58PICiYA.jpg";
