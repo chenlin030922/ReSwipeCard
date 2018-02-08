@@ -11,12 +11,37 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     RecyclerView mRecyclerView;
+    Button mChangeBtn,mLeftBtn,mRightBtn;
+    private BottomDialog mDialog;
+    @Override
+    public void onClick(View view) {
+        int id=view.getId();
+        switch (id) {
+            case R.id.turn_left:
+                break;
+            case R.id.turn_right:
+                break;
+            case R.id.change_type:
+                break;
+        }
+    }
+    private void showDialog(){
+        if (mDialog == null) {
+            mDialog=new BottomDialog(this);
+            View view= LayoutInflater.from(this).inflate(R.layout.layout_dialog,null);
+            mDialog.setContentView(view);
+        }
+        mDialog.show();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,5 +100,11 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(layoutManager);
         CardAdapter cardAdapter = new CardAdapter(list);
         mRecyclerView.setAdapter(cardAdapter);
+        mLeftBtn=findViewById(R.id.turn_left);
+        mRightBtn=findViewById(R.id.turn_right);
+        mChangeBtn=findViewById(R.id.change_type);
+        mLeftBtn.setOnClickListener(this);
+        mChangeBtn.setOnClickListener(this);
+        mRightBtn.setOnClickListener(this);
     }
 }
