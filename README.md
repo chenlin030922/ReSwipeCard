@@ -16,7 +16,7 @@
 - 自定义滑动动画(not yet)
 - 增加手动滑动
 
-
+![gif](https://github.com/JerryChan123/ReSwipeCard/blob/dev/pic/gif/normal.gif)
 
 ![Alt text](https://github.com/JerryChan123/ReSwipeCard/blob/dev/pic/img/card_stack.jpg)
 
