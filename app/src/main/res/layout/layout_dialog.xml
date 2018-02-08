@@ -3,10 +3,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <android.support.v7.widget.RecyclerView
-        android:layout_width="match_parent"
-        android:id="@+id/dialog_list"
-        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="match_parent"
+            android:id="@+id/dialog_tantan"
+            android:text="open tantan style"
+            android:layout_height="50dp"/>
 
-    </android.support.v7.widget.RecyclerView>
 </FrameLayout>

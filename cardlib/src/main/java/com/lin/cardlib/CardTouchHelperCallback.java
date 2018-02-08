@@ -32,8 +32,8 @@ public class CardTouchHelperCallback<T> extends ReItemTouchHelper.Callback {
         return mRecyclerView;
     }
 
-    public void setOnSwipedListener(OnSwipeCardListener<T> mListener) {
-        this.mListener = mListener;
+    public void setOnSwipedListener(OnSwipeCardListener<T> listener) {
+        this.mListener = listener;
     }
 
     @Override
@@ -104,93 +104,89 @@ public class CardTouchHelperCallback<T> extends ReItemTouchHelper.Callback {
                             float dX, float dY, int actionState, boolean isCurrentlyActive) {
         super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
         View itemView = viewHolder.itemView;
-        if (actionState == ReItemTouchHelper.ACTION_STATE_SWIPE) {
-            float ratio;
-            float ratioX = dX / getXThreshold(recyclerView);
-            int direction;
-            if (Math.abs(dX) > Math.abs(dY)) {
-                ratio = ratioX;
-                if (dX > 0) {
-                    direction = ReItemTouchHelper.RIGHT;
-                } else {
-                    direction = ReItemTouchHelper.LEFT;
-                }
+//        if (actionState == ReItemTouchHelper.ACTION_STATE_SWIPE) {
+        float ratio;
+        float ratioX = dX / getXThreshold(recyclerView);
+        int direction;
+        if (Math.abs(dX) > Math.abs(dY)) {
+            ratio = ratioX;
+            if (dX > 0) {
+                direction = ReItemTouchHelper.RIGHT;
             } else {
-                ratio = dY / getYThreshold(recyclerView);
-                if (dY > 0) {
-                    direction = ReItemTouchHelper.DOWN;
-                } else {
-                    direction = ReItemTouchHelper.UP;
-                }
+                direction = ReItemTouchHelper.LEFT;
             }
-            if (ratio > 1) {
-                ratio = 1;
-            } else if (ratio < -1) {
-                ratio = -1;
-            }
-            if (ratioX > 1) {
-                ratioX = 1;
-            } else if (ratioX < -1) {
-                ratioX = -1;
-            }
-            itemView.setRotation(ratioX * mConfig.getCardRotateDegree());
-            int childCount = recyclerView.getChildCount();
-            float defaultScale = mConfig.getCardScale();
-            if (childCount > mConfig.getShowCount()) {
-                for (int position = 1; position < childCount - 1; position++) {
-                    int index = childCount - position - 1;
-                    float scale = 1 - index * defaultScale + Math.abs(ratio) * defaultScale;
-                    View view = recyclerView.getChildAt(position);
-                    view.setScaleX(scale);
-                    view.setScaleY(scale);
-                    switch (mConfig.getStackDirection()) {
-                        case ReItemTouchHelper.UP:
-                            view.setTranslationY(-(index - Math.abs(ratio)) * itemView.getMeasuredHeight() / mConfig.getCardTranslateDistance());
-                            break;
-                        case ReItemTouchHelper.RIGHT:
-                            view.setTranslationX((index - Math.abs(ratio)) * itemView.getMeasuredWidth() / mConfig.getCardTranslateDistance());
-                            break;
-                        case ReItemTouchHelper.LEFT:
-                            view.setTranslationX(-(index - Math.abs(ratio)) * itemView.getMeasuredWidth() / mConfig.getCardTranslateDistance());
-                            break;
-                        case ReItemTouchHelper.DOWN:
-                        default:
-                            view.setTranslationY((index - Math.abs(ratio)) * itemView.getMeasuredHeight() / mConfig.getCardTranslateDistance());
-                            break;
-                    }
-                }
+        } else {
+            ratio = dY / getYThreshold(recyclerView);
+            if (dY > 0) {
+                direction = ReItemTouchHelper.DOWN;
             } else {
-                for (int position = 0; position < childCount - 1; position++) {
-                    int index = childCount - position - 1;
-                    View view = recyclerView.getChildAt(position);
-                    float scale = 1 - index * defaultScale + Math.abs(ratio) * defaultScale;
-                    view.setScaleX(scale);
-                    view.setScaleY(scale);
-                    switch (mConfig.getStackDirection()) {
-                        case ReItemTouchHelper.UP:
-                            view.setTranslationY(-(index - Math.abs(ratio)) * itemView.getMeasuredHeight() / mConfig.getCardTranslateDistance());
-                            break;
-                        case ReItemTouchHelper.RIGHT:
-                            view.setTranslationX((index - Math.abs(ratio)) * itemView.getMeasuredWidth() / mConfig.getCardTranslateDistance());
-                            break;
-                        case ReItemTouchHelper.LEFT:
-                            view.setTranslationX(-(index - Math.abs(ratio)) * itemView.getMeasuredWidth() / mConfig.getCardTranslateDistance());
-                            break;
-                        case ReItemTouchHelper.DOWN:
-                        default:
-                            view.setTranslationY((index - Math.abs(ratio)) * itemView.getMeasuredHeight() / mConfig.getCardTranslateDistance());
-                            break;
-                    }
+                direction = ReItemTouchHelper.UP;
+            }
+        }
+        if (ratio > 1) {
+            ratio = 1;
+        } else if (ratio < -1) {
+            ratio = -1;
+        }
+        if (ratioX > 1) {
+            ratioX = 1;
+        } else if (ratioX < -1) {
+            ratioX = -1;
+        }
+        itemView.setRotation(ratioX * mConfig.getCardRotateDegree());
+        int childCount = recyclerView.getChildCount();
+        float defaultScale = mConfig.getCardScale();
+        if (childCount > mConfig.getShowCount()) {
+            for (int position = 1; position < childCount - 1; position++) {
+                int index = childCount - position - 1;
+                float scale = 1 - index * defaultScale + Math.abs(ratio) * defaultScale;
+                View view = recyclerView.getChildAt(position);
+                view.setScaleX(scale);
+                view.setScaleY(scale);
+                switch (mConfig.getStackDirection()) {
+                    case ReItemTouchHelper.UP:
+                        view.setTranslationY(-(index - Math.abs(ratio)) * itemView.getMeasuredHeight() / mConfig.getCardTranslateDistance());
+                        break;
+                    case ReItemTouchHelper.RIGHT:
+                        view.setTranslationX((index - Math.abs(ratio)) * itemView.getMeasuredWidth() / mConfig.getCardTranslateDistance());
+                        break;
+                    case ReItemTouchHelper.LEFT:
+                        view.setTranslationX(-(index - Math.abs(ratio)) * itemView.getMeasuredWidth() / mConfig.getCardTranslateDistance());
+                        break;
+                    case ReItemTouchHelper.DOWN:
+                    default:
+                        view.setTranslationY((index - Math.abs(ratio)) * itemView.getMeasuredHeight() / mConfig.getCardTranslateDistance());
+                        break;
                 }
             }
-            if (mListener != null) {
-                if (ratio != 0) {
-                    mListener.onSwiping(viewHolder, dX, dY, direction);
-                } else {
-                    mListener.onSwiping(viewHolder, dX, dY, CardConfig.SWIPING_NONE);
+        } else {
+            for (int position = 0; position < childCount - 1; position++) {
+                int index = childCount - position - 1;
+                View view = recyclerView.getChildAt(position);
+                float scale = 1 - index * defaultScale + Math.abs(ratio) * defaultScale;
+                view.setScaleX(scale);
+                view.setScaleY(scale);
+                switch (mConfig.getStackDirection()) {
+                    case ReItemTouchHelper.UP:
+                        view.setTranslationY(-(index - Math.abs(ratio)) * itemView.getMeasuredHeight() / mConfig.getCardTranslateDistance());
+                        break;
+                    case ReItemTouchHelper.RIGHT:
+                        view.setTranslationX((index - Math.abs(ratio)) * itemView.getMeasuredWidth() / mConfig.getCardTranslateDistance());
+                        break;
+                    case ReItemTouchHelper.LEFT:
+                        view.setTranslationX(-(index - Math.abs(ratio)) * itemView.getMeasuredWidth() / mConfig.getCardTranslateDistance());
+                        break;
+                    case ReItemTouchHelper.DOWN:
+                    default:
+                        view.setTranslationY((index - Math.abs(ratio)) * itemView.getMeasuredHeight() / mConfig.getCardTranslateDistance());
+                        break;
                 }
             }
         }
+        if (mListener != null && ratio != 0) {
+            mListener.onSwiping(viewHolder, dX, dY, direction);
+        }
+//        }
     }
 
     @Override
@@ -219,6 +215,6 @@ public class CardTouchHelperCallback<T> extends ReItemTouchHelper.Callback {
     }
 
     private float getYThreshold(RecyclerView recyclerView) {
-        return recyclerView.getHeight() * 0.4f;
+        return getXThreshold(recyclerView);
     }
 }

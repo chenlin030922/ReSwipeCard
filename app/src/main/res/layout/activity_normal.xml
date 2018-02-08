@@ -5,12 +5,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:orientation="vertical"
-    android:clipChildren="false"
     android:layout_height="match_parent">
         <android.support.v7.widget.RecyclerView
-            android:layout_width="match_parent"
+            android:layout_width="200dp"
             android:id="@+id/list"
-            android:layout_height="match_parent">
+            android:layout_height="200dp">
 
         </android.support.v7.widget.RecyclerView>
         <Button

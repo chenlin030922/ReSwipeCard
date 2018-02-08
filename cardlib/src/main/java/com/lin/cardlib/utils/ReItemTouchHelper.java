@@ -1,4 +1,4 @@
- 
+
 
 package com.lin.cardlib.utils;
 
@@ -32,46 +32,46 @@ import android.view.animation.Interpolator;
 import java.util.ArrayList;
 import java.util.List;
 
- 
+
 public class ReItemTouchHelper extends RecyclerView.ItemDecoration
         implements RecyclerView.OnChildAttachStateChangeListener {
 
-     
+
     public static final int UP = 1;
 
-     
+
     public static final int DOWN = 1 << 1;
 
-     
+
     public static final int LEFT = 1 << 2;
 
-     
+
     public static final int RIGHT = 1 << 3;
 
     // If you change these relative direction values, update Callback#convertToAbsoluteDirection,
     // Callback#convertToRelativeDirection.
-     
+
     public static final int START = LEFT << 2;
 
-     
+
     public static final int END = RIGHT << 2;
 
-     
+
     public static final int ACTION_STATE_IDLE = 0;
 
-     
+
     public static final int ACTION_STATE_SWIPE = 1;
 
-     
+
     public static final int ACTION_STATE_DRAG = 2;
 
-     
+
     public static final int ANIMATION_TYPE_SWIPE_SUCCESS = 1 << 1;
 
-     
+
     public static final int ANIMATION_TYPE_SWIPE_CANCEL = 1 << 2;
 
-     
+
     public static final int ANIMATION_TYPE_DRAG = 1 << 3;
 
     static final String TAG = "ItemTouchHelper";
@@ -88,59 +88,59 @@ public class ReItemTouchHelper extends RecyclerView.ItemDecoration
 
     static final int ACTION_MODE_DRAG_MASK = ACTION_MODE_SWIPE_MASK << DIRECTION_FLAG_COUNT;
 
-     
+
     private static final int PIXELS_PER_SECOND = 1000;
 
-     
+
     final List<View> mPendingCleanup = new ArrayList<View>();
 
-     
+
     private final float[] mTmpPosition = new float[2];
 
-     
+
     ViewHolder mSelected = null;
 
-     
+
     float mInitialTouchX;
 
     float mInitialTouchY;
 
-     
+
     float mSwipeEscapeVelocity;
 
-     
+
     float mMaxSwipeVelocity;
 
-     
+
     float mDx;
 
     float mDy;
 
-     
+
     float mSelectedStartX;
 
     float mSelectedStartY;
 
-     
+
     int mActivePointerId = ACTIVE_POINTER_ID_NONE;
 
-     
+
     Callback mCallback;
 
-     
+
     int mActionState = ACTION_STATE_IDLE;
 
-     
-    int mSelectedFlags;
 
-     
+    int mSelectedFlags;
+    boolean isManually;
+
     List<RecoverAnimation> mRecoverAnimations = new ArrayList<RecoverAnimation>();
 
     private int mSlop;
 
     RecyclerView mRecyclerView;
 
-     
+
     final Runnable mScrollRunnable = new Runnable() {
         @Override
         public void run() {
@@ -154,7 +154,7 @@ public class ReItemTouchHelper extends RecyclerView.ItemDecoration
         }
     };
 
-     
+
     VelocityTracker mVelocityTracker;
 
     //re-used list for selecting a swap target
@@ -163,16 +163,16 @@ public class ReItemTouchHelper extends RecyclerView.ItemDecoration
     //re used for for sorting swap targets
     private List<Integer> mDistances;
 
-     
+
     private RecyclerView.ChildDrawingOrderCallback mChildDrawingOrderCallback = null;
 
-     
+
     View mOverdrawChild = null;
 
-     
+
     int mOverdrawChildPosition = -1;
 
-     
+
     GestureDetectorCompat mGestureDetector;
 
     private final OnItemTouchListener mOnItemTouchListener
@@ -292,13 +292,13 @@ public class ReItemTouchHelper extends RecyclerView.ItemDecoration
         }
     };
 
-     
+
     private Rect mTmpRect;
 
-     
+
     private long mDragScrollStartTimeInMs;
 
-     
+
     public ReItemTouchHelper(Callback callback) {
         mCallback = callback;
         //addCode
@@ -312,7 +312,7 @@ public class ReItemTouchHelper extends RecyclerView.ItemDecoration
                 y <= top + child.getHeight();
     }
 
-     
+
     public void attachToRecyclerView(@Nullable RecyclerView recyclerView) {
         if (mRecyclerView == recyclerView) {
             return; // nothing to do
@@ -365,13 +365,15 @@ public class ReItemTouchHelper extends RecyclerView.ItemDecoration
     }
 
     private void getSelectedDxDy(float[] outPosition) {
+        float dx = isManually ? 0 : mDx;
+        float dy = isManually ? 0 : mDy;
         if ((mSelectedFlags & (LEFT | RIGHT)) != 0) {
-            outPosition[0] = mSelectedStartX + mDx - mSelected.itemView.getLeft();
+            outPosition[0] = mSelectedStartX + dx - mSelected.itemView.getLeft();
         } else {
             outPosition[0] = ViewCompat.getTranslationX(mSelected.itemView);
         }
         if ((mSelectedFlags & (UP | DOWN)) != 0) {
-            outPosition[1] = mSelectedStartY + mDy - mSelected.itemView.getTop();
+            outPosition[1] = mSelectedStartY + dy - mSelected.itemView.getTop();
         } else {
             outPosition[1] = ViewCompat.getTranslationY(mSelected.itemView);
         }
@@ -403,7 +405,7 @@ public class ReItemTouchHelper extends RecyclerView.ItemDecoration
                 mRecoverAnimations, mActionState, dx, dy);
     }
 
-     
+
     void select(ViewHolder selected, int actionState) {
         if (selected == mSelected && actionState == mActionState) {
             return;
@@ -561,7 +563,43 @@ public class ReItemTouchHelper extends RecyclerView.ItemDecoration
         return false;
     }
 
-     
+    public void swipeManually(int direction) {
+        //find the first card
+        ViewHolder viewHolder = mRecyclerView.findViewHolderForLayoutPosition(0);
+        if (!hasRunningRecoverAnim()) {
+            //reset to zero,make a fake mDx,mDy
+            int addValue = 50;
+            isManually = true;
+            switch (direction) {
+                case DOWN:
+                    mDx = 0;
+                    mDy = mRecyclerView.getHeight() * mCallback
+                            .getSwipeThreshold(viewHolder) + addValue;
+                    break;
+                case RIGHT:
+                    mDy = 0;
+                    mDx = (mRecyclerView.getWidth() * mCallback
+                            .getSwipeThreshold(viewHolder) + addValue);
+                    break;
+                case LEFT:
+                    mDy = 0;
+                    mDx = -(mRecyclerView.getWidth() * mCallback
+                            .getSwipeThreshold(viewHolder) + addValue);
+                    break;
+                case UP:
+                    mDx = 0;
+                    mDy = -(mRecyclerView.getHeight() * mCallback
+                            .getSwipeThreshold(viewHolder) + addValue);
+                    break;
+
+            }
+            mSelected = viewHolder;
+            select(null, ACTION_STATE_IDLE);
+            mActivePointerId = ACTIVE_POINTER_ID_NONE;
+        }
+    }
+
+
     boolean scrollIfNecessary() {
         if (mSelected == null) {
             mDragScrollStartTimeInMs = Long.MIN_VALUE;
@@ -674,7 +712,7 @@ public class ReItemTouchHelper extends RecyclerView.ItemDecoration
         return mSwapTargets;
     }
 
-     
+
     void moveIfNecessary(ViewHolder viewHolder) {
         if (mRecyclerView.isLayoutRequested()) {
             return;
@@ -732,7 +770,7 @@ public class ReItemTouchHelper extends RecyclerView.ItemDecoration
         }
     }
 
-     
+
     int endRecoverAnimation(ViewHolder viewHolder, boolean override) {
         final int recoverAnimSize = mRecoverAnimations.size();
         for (int i = recoverAnimSize - 1; i >= 0; i--) {
@@ -795,7 +833,7 @@ public class ReItemTouchHelper extends RecyclerView.ItemDecoration
         return mRecyclerView.getChildViewHolder(child);
     }
 
-     
+
     boolean checkSelectForSwipe(int action, MotionEvent motionEvent, int pointerIndex) {
         if (mSelected != null || action != MotionEvent.ACTION_MOVE
                 || mActionState == ACTION_STATE_DRAG || !mCallback.isItemViewSwipeEnabled()) {
@@ -874,7 +912,7 @@ public class ReItemTouchHelper extends RecyclerView.ItemDecoration
         return mRecyclerView.findChildViewUnder(x, y);
     }
 
-     
+
     public void startDrag(ViewHolder viewHolder) {
         if (!mCallback.hasDragFlag(mRecyclerView, viewHolder)) {
             Log.e(TAG, "Start drag has been called but swiping is not enabled");
@@ -890,7 +928,7 @@ public class ReItemTouchHelper extends RecyclerView.ItemDecoration
         select(viewHolder, ACTION_STATE_DRAG);
     }
 
-     
+
     public void startSwipe(ViewHolder viewHolder) {
         if (!mCallback.hasSwipeFlag(mRecyclerView, viewHolder)) {
             Log.e(TAG, "Start swipe has been called but dragging is not enabled");
@@ -1109,14 +1147,14 @@ public class ReItemTouchHelper extends RecyclerView.ItemDecoration
         return mRecyclerView;
     }
 
-     
+
     public static interface ViewDropHandler {
 
-         
+
         public void prepareForDrop(View view, View target, int x, int y);
     }
 
-     
+
     @SuppressWarnings("UnusedParameters")
     public abstract static class Callback {
 
@@ -1149,7 +1187,7 @@ public class ReItemTouchHelper extends RecyclerView.ItemDecoration
             }
         };
 
-         
+
         private static final long DRAG_SCROLL_ACCELERATION_LIMIT_TIME_MS = 2000;
 
         private int mCachedMaxScrollSpeed = -1;
@@ -1164,12 +1202,12 @@ public class ReItemTouchHelper extends RecyclerView.ItemDecoration
             }
         }
 
-         
+
         public static ReItemTouchUIUtil getDefaultUIUtil() {
             return sUICallback;
         }
 
-         
+
         public static int convertToRelativeDirection(int flags, int layoutDirection) {
             int masked = flags & ABS_HORIZONTAL_DIR_FLAGS;
             if (masked == 0) {
@@ -1189,19 +1227,19 @@ public class ReItemTouchHelper extends RecyclerView.ItemDecoration
             return flags;
         }
 
-         
+
         public static int makeMovementFlags(int dragFlags, int swipeFlags) {
             return makeFlag(ACTION_STATE_IDLE, swipeFlags | dragFlags) |
                     makeFlag(ACTION_STATE_SWIPE, swipeFlags) | makeFlag(ACTION_STATE_DRAG,
                     dragFlags);
         }
 
-         
+
         public static int makeFlag(int actionState, int directions) {
             return directions << (actionState * DIRECTION_FLAG_COUNT);
         }
 
-         
+
         public abstract int getMovementFlags(RecyclerView recyclerView,
                                              ViewHolder viewHolder);
 
@@ -1226,7 +1264,7 @@ public class ReItemTouchHelper extends RecyclerView.ItemDecoration
             return DEFAULT_SWIPE_ANIMATION_DURATION;
         }
 
-         
+
         public int convertToAbsoluteDirection(int flags, int layoutDirection) {
             int masked = flags & RELATIVE_DIR_FLAGS;
             if (masked == 0) {
@@ -1263,53 +1301,52 @@ public class ReItemTouchHelper extends RecyclerView.ItemDecoration
             return (flags & ACTION_MODE_SWIPE_MASK) != 0;
         }
 
-         
+
         public boolean canDropOver(RecyclerView recyclerView, ViewHolder current,
                                    ViewHolder target) {
             return true;
         }
 
-         
+
         public abstract boolean onMove(RecyclerView recyclerView,
                                        ViewHolder viewHolder, ViewHolder target);
 
-         
+
         public boolean isLongPressDragEnabled() {
             return true;
         }
 
-         
+
         public boolean isItemViewSwipeEnabled() {
             return true;
         }
 
-         
+
         public int getBoundingBoxMargin() {
             return 0;
         }
 
-         
+
         public float getSwipeThreshold(ViewHolder viewHolder) {
             return .5f;
         }
 
 
-         
         public float getMoveThreshold(ViewHolder viewHolder) {
             return .5f;
         }
 
-         
+
         public float getSwipeEscapeVelocity(float defaultValue) {
             return defaultValue;
         }
 
-         
+
         public float getSwipeVelocityThreshold(float defaultValue) {
             return defaultValue;
         }
 
-         
+
         public ViewHolder chooseDropTarget(ViewHolder selected,
                                            List<ViewHolder> dropTargets, int curX, int curY) {
             int right = curX + selected.itemView.getWidth();
@@ -1366,10 +1403,10 @@ public class ReItemTouchHelper extends RecyclerView.ItemDecoration
             return winner;
         }
 
-         
+
         public abstract void onSwiped(ViewHolder viewHolder, int direction);
 
-         
+
         public void onSelectedChanged(ViewHolder viewHolder, int actionState) {
             if (viewHolder != null) {
                 sUICallback.onSelected(viewHolder.itemView);
@@ -1384,7 +1421,7 @@ public class ReItemTouchHelper extends RecyclerView.ItemDecoration
             return mCachedMaxScrollSpeed;
         }
 
-         
+
         public void onMoved(final RecyclerView recyclerView,
                             final ViewHolder viewHolder, int fromPos, final ViewHolder target, int toPos, int x,
                             int y) {
@@ -1423,6 +1460,7 @@ public class ReItemTouchHelper extends RecyclerView.ItemDecoration
                     List<RecoverAnimation> recoverAnimationList,
                     int actionState, float dX, float dY) {
             final int recoverAnimSize = recoverAnimationList.size();
+            //when action up execute
             for (int i = 0; i < recoverAnimSize; i++) {
                 final ReItemTouchHelper.RecoverAnimation anim = recoverAnimationList.get(i);
                 anim.update();
@@ -1431,6 +1469,7 @@ public class ReItemTouchHelper extends RecyclerView.ItemDecoration
                         false);
                 c.restoreToCount(count);
             }
+            // when action down execute
             if (selected != null) {
                 final int count = c.save();
                 onChildDraw(c, parent, selected, dX, dY, actionState, true);
@@ -1468,7 +1507,7 @@ public class ReItemTouchHelper extends RecyclerView.ItemDecoration
             }
         }
 
-         
+
         public void clearView(RecyclerView recyclerView, ViewHolder viewHolder) {
             sUICallback.clearView(viewHolder.itemView);
         }
@@ -1478,7 +1517,7 @@ public class ReItemTouchHelper extends RecyclerView.ItemDecoration
             return true;
         }
 
-         
+
         public void onChildDraw(Canvas c, RecyclerView recyclerView,
                                 ViewHolder viewHolder,
                                 float dX, float dY, int actionState, boolean isCurrentlyActive) {
@@ -1486,7 +1525,7 @@ public class ReItemTouchHelper extends RecyclerView.ItemDecoration
                     isCurrentlyActive);
         }
 
-         
+
         public void onChildDrawOver(Canvas c, RecyclerView recyclerView,
                                     ViewHolder viewHolder,
                                     float dX, float dY, int actionState, boolean isCurrentlyActive) {
@@ -1494,7 +1533,7 @@ public class ReItemTouchHelper extends RecyclerView.ItemDecoration
                     isCurrentlyActive);
         }
 
-         
+
         public long getAnimationDuration(RecyclerView recyclerView, int animationType,
                                          float animateDx, float animateDy) {
             final RecyclerView.ItemAnimator itemAnimator = recyclerView.getItemAnimator();
@@ -1507,7 +1546,7 @@ public class ReItemTouchHelper extends RecyclerView.ItemDecoration
             }
         }
 
-         
+
         public int interpolateOutOfBoundsScroll(RecyclerView recyclerView,
                                                 int viewSize, int viewSizeOutOfBounds,
                                                 int totalSize, long msSinceStartScroll) {
@@ -1533,35 +1572,35 @@ public class ReItemTouchHelper extends RecyclerView.ItemDecoration
         }
     }
 
-     
+
     public abstract static class SimpleCallback extends Callback {
 
         private int mDefaultSwipeDirs;
 
         private int mDefaultDragDirs;
 
-         
+
         public SimpleCallback(int dragDirs, int swipeDirs) {
             mDefaultSwipeDirs = swipeDirs;
             mDefaultDragDirs = dragDirs;
         }
 
-         
+
         public void setDefaultSwipeDirs(int defaultSwipeDirs) {
             mDefaultSwipeDirs = defaultSwipeDirs;
         }
 
-         
+
         public void setDefaultDragDirs(int defaultDragDirs) {
             mDefaultDragDirs = defaultDragDirs;
         }
 
-         
+
         public int getSwipeDirs(RecyclerView recyclerView, ViewHolder viewHolder) {
             return mDefaultSwipeDirs;
         }
 
-         
+
         public int getDragDirs(RecyclerView recyclerView, ViewHolder viewHolder) {
             return mDefaultDragDirs;
         }
@@ -1687,7 +1726,7 @@ public class ReItemTouchHelper extends RecyclerView.ItemDecoration
             mFraction = fraction;
         }
 
-         
+
         public void update() {
             if (mStartDx == mTargetX) {
                 mX = ViewCompat.getTranslationX(mViewHolder.itemView);
@@ -1711,6 +1750,7 @@ public class ReItemTouchHelper extends RecyclerView.ItemDecoration
             if (!mEnded) {
                 mViewHolder.setIsRecyclable(true);
             }
+            isManually = false;
             mEnded = true;
             if (mCallback.enableHardWare()) {
                 mViewHolder.itemView.setLayerType(View.LAYER_TYPE_NONE, null);
@@ -1723,6 +1763,7 @@ public class ReItemTouchHelper extends RecyclerView.ItemDecoration
             if (mCallback.enableHardWare()) {
                 mViewHolder.itemView.setLayerType(View.LAYER_TYPE_NONE, null);
             }
+            isManually = false;
         }
 
         @Override

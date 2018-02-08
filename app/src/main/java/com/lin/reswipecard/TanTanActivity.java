@@ -8,6 +8,6 @@ public class TanTanActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tantan);
+        setContentView(R.layout.activity_tan_tan);
     }
 }
