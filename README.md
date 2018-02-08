@@ -16,6 +16,10 @@
 - 自定义滑动动画(not yet)
 - 增加手动滑动
 
+
+
+![Alt text](https://github.com/JerryChan123/ReSwipeCard/blob/dev/pic/img/card_stack.jpg)
+
 项目中加入了RecyclerView，如果自己的项目中用到了，需要向底下一样:
 
 ```java
