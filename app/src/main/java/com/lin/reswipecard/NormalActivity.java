@@ -10,7 +10,6 @@ import com.lin.cardlib.utils.ReItemTouchHelper;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -28,10 +27,10 @@ public class NormalActivity extends AppCompatActivity implements View.OnClickLis
         int id = view.getId();
         switch (id) {
             case R.id.turn_left:
-                mReItemTouchHelper.swipeManually(ItemTouchHelper.LEFT);
+                mReItemTouchHelper.swipeManually(ReItemTouchHelper.LEFT);
                 break;
             case R.id.turn_right:
-                mReItemTouchHelper.swipeManually(ItemTouchHelper.RIGHT);
+                mReItemTouchHelper.swipeManually(ReItemTouchHelper.RIGHT);
                 break;
             case R.id.change_type:
                 break;
@@ -45,9 +44,9 @@ public class NormalActivity extends AppCompatActivity implements View.OnClickLis
         mRecyclerView = (RecyclerView) findViewById(R.id.list);
         List<CardBean> list = CardMaker.initCards();
         CardConfig cardConfig=new CardConfig();
-        CardTouchHelperCallback helperCallback = new CardTouchHelperCallback(mRecyclerView, list, new CardConfig());
+        CardTouchHelperCallback helperCallback = new CardTouchHelperCallback(mRecyclerView, list,cardConfig);
         mReItemTouchHelper = new ReItemTouchHelper(helperCallback);
-        CardLayoutManager layoutManager = new CardLayoutManager(mReItemTouchHelper, new CardConfig());
+        CardLayoutManager layoutManager = new CardLayoutManager(mReItemTouchHelper, cardConfig);
         mRecyclerView.setLayoutManager(layoutManager);
         CardAdapter cardAdapter = new CardAdapter(list);
         mRecyclerView.setAdapter(cardAdapter);
