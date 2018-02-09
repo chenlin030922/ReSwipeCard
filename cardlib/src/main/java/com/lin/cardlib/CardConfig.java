@@ -13,7 +13,7 @@ public class CardConfig {
 
     public static final float DEFAULT_SCALE = 0.1f;
 
-    public static final int DEFAULT_TRANSLATE_Y = 14;
+    public static final int DEFAULT_TRANSLATE = 14;
 
     public static final float DEFAULT_ROTATE_DEGREE = 15f;
 
@@ -26,7 +26,7 @@ public class CardConfig {
     }
 
     public int getCardTranslateDistance() {
-        return DEFAULT_TRANSLATE_Y;
+        return DEFAULT_TRANSLATE;
     }
 
     public float getCardRotateDegree() {
