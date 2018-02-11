@@ -1,7 +1,7 @@
 package com.lin.reswipecard;
 
 
-import com.lin.cardlib.CardConfig;
+import com.lin.cardlib.CardSetting;
 import com.lin.cardlib.CardLayoutManager;
 import com.lin.cardlib.CardTouchHelperCallback;
 import com.lin.cardlib.OnSwipeCardListener;
@@ -43,14 +43,8 @@ public class NormalActivity extends AppCompatActivity implements View.OnClickLis
         setContentView(R.layout.activity_normal);
         mRecyclerView = (RecyclerView) findViewById(R.id.list);
         List<CardBean> list = CardMaker.initCards();
-        CardConfig cardConfig=new CardConfig();
-        CardTouchHelperCallback helperCallback = new CardTouchHelperCallback(mRecyclerView, list,cardConfig);
-        mReItemTouchHelper = new ReItemTouchHelper(helperCallback);
-        CardLayoutManager layoutManager = new CardLayoutManager(mReItemTouchHelper, cardConfig);
-        mRecyclerView.setLayoutManager(layoutManager);
-        CardAdapter cardAdapter = new CardAdapter(list);
-        mRecyclerView.setAdapter(cardAdapter);
-        helperCallback.setOnSwipedListener(new OnSwipeCardListener<CardBean>() {
+        CardSetting setting=new CardSetting();
+        setting.setSwipeListener(new OnSwipeCardListener<CardBean>() {
             @Override
             public void onSwiping(RecyclerView.ViewHolder viewHolder, float dx, float dy, int direction) {
                 switch (direction) {
@@ -92,9 +86,16 @@ public class NormalActivity extends AppCompatActivity implements View.OnClickLis
 
             @Override
             public void onSwipedClear() {
-
+                Toast.makeText(NormalActivity.this, "cards are consumed", Toast.LENGTH_SHORT).show();
             }
         });
+        CardTouchHelperCallback helperCallback = new CardTouchHelperCallback(mRecyclerView, list,setting);
+        mReItemTouchHelper = new ReItemTouchHelper(helperCallback);
+        CardLayoutManager layoutManager = new CardLayoutManager(mReItemTouchHelper, setting);
+        mRecyclerView.setLayoutManager(layoutManager);
+        CardAdapter cardAdapter = new CardAdapter(list);
+        mRecyclerView.setAdapter(cardAdapter);
+
         mLeftBtn = findViewById(R.id.turn_left);
         mRightBtn = findViewById(R.id.turn_right);
         mChangeBtn = findViewById(R.id.change_type);

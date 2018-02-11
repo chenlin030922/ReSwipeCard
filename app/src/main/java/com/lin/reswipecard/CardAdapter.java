@@ -47,6 +47,12 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardHolder> {
                 Toast.makeText(holder.itemView.getContext(), "click " + bean.getTitle(), Toast.LENGTH_SHORT).show();
             }
         });
+        holder.img.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(holder.itemView.getContext(),"点击了 img",Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override

@@ -1,30 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:layout_width="300dp"
-              android:layout_height="360dp"
-              android:background="@drawable/shape_gray"
-              android:orientation="vertical"
-              android:paddingBottom="30dp">
+<com.lin.cardlib.SwipeTouchLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                  xmlns:app="http://schemas.android.com/apk/res-auto"
+                                  android:layout_width="wrap_content"
+                                  android:layout_height="wrap_content"
+                                  android:paddingBottom="30dp">
 
-    <com.makeramen.roundedimageview.RoundedImageView
-        android:id="@+id/card_img"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="1dp"
-        android:layout_weight="1"
-        android:scaleType="centerCrop"
-        app:riv_corner_radius_top_right="4dp"
-        app:riv_corner_radius_top_left="4dp"/>
+    <LinearLayout
+        android:layout_width="300dp"
+        android:layout_height="360dp"
+        android:background="@drawable/shape_gray"
+        android:orientation="vertical"
+        android:paddingBottom="30dp">
+        <com.lin.reswipecard.SrcImageView
+            android:id="@+id/card_img"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="1dp"
+            android:layout_weight="1"
+            android:scaleType="centerCrop"/>
 
-    <TextView
-        android:id="@+id/card_txt"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp"
-        android:gravity="center"
-        android:textColor="#000000"
-        android:textSize="16sp"/>
-</LinearLayout>
+        <TextView
+            android:id="@+id/card_txt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:textColor="#000000"
+            android:textSize="16sp"/>
+    </LinearLayout>
+
+</com.lin.cardlib.SwipeTouchLayout>
