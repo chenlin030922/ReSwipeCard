@@ -14,7 +14,7 @@
 - 卡片数量
 - 增加手动滑动
 
-效果图如下所示：
+效果图如下所示，也可以直接下载跟根目录下的app-debug.apk查看：
 
 ![gif](https://github.com/JerryChan123/ReSwipeCard/blob/dev/pic/gif/normal.gif)
 
