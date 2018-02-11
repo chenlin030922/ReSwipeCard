@@ -3,7 +3,7 @@
 本项目是在 [CardSwipeLayout](https://github.com/yuqirong/CardSwipeLayout)的基础上进行的修改，感谢原作者。
 
 项目功能：
-
+- 解决滑动与点击事件冲突
 - 增加硬件支持
 - 滑动方向控制
 - 滑出方向控制
