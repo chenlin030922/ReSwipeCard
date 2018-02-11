@@ -67,15 +67,12 @@ public class NormalActivity extends AppCompatActivity implements View.OnClickLis
             public void onSwipedOut(RecyclerView.ViewHolder viewHolder, CardBean o, int direction) {
                 switch (direction) {
                     case ReItemTouchHelper.DOWN:
-//                        Log.e("aaa", "swipe out direction=down");
                         Toast.makeText(NormalActivity.this, "swipe down out", Toast.LENGTH_SHORT).show();
                         break;
                     case ReItemTouchHelper.UP:
-//                        Log.e("aaa", "swipe out direction=up");
                         Toast.makeText(NormalActivity.this, "swipe up out ", Toast.LENGTH_SHORT).show();
                         break;
                     case ReItemTouchHelper.LEFT:
-//                        Log.e("aaa", "swipe out direction=left");
                         Toast.makeText(NormalActivity.this, "swipe left out", Toast.LENGTH_SHORT).show();
                         break;
                     case ReItemTouchHelper.RIGHT:

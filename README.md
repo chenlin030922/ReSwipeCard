@@ -2,26 +2,102 @@
 
 本项目是在 [CardSwipeLayout](https://github.com/yuqirong/CardSwipeLayout)的基础上进行的修改，感谢原作者。
 
-项目新增：
+项目功能：
 
-- 优化触摸与点击处理事件
-- 增加硬件加速选项
-- 修改系统ItemTouchHelper的源码，优化动画
-- 上下左右滑动控制
-- 上下左右滑出控制
+- 增加硬件支持
+- 滑动方向控制
+- 滑出方向控制
 - 滑出时间控制
 - 滑出阈值
 - 循环卡片
 - 卡片堆叠方式
 - 卡片数量
-- 自定义滑动动画(not yet)
 - 增加手动滑动
 
 效果图如下所示：
 
 ![gif](https://github.com/JerryChan123/ReSwipeCard/blob/dev/pic/gif/normal.gif)
 
+-----
 
+### 使用方式
+
+```java
+   dependencies {
+    compile ('lin.jerrylin0322.reswipecard:reswipecard:1.0.0')
+}
+```
+
+maven:
+
+```java
+<dependency>
+  <groupId>lin.jerrylin0322.reswipecard</groupId>
+  <artifactId>reswipecard</artifactId>
+  <version>1.0.0</version>
+  <type>pom</type>
+</dependency>
+```
+
+代码中：
+
+```java
+ CardSetting setting=new CardSetting();
+        setting.setSwipeListener(new OnSwipeCardListener<CardBean>() {
+            @Override
+            public void onSwiping(RecyclerView.ViewHolder viewHolder, float dx, float dy, int direction) {
+                switch (direction) {
+                    case ReItemTouchHelper.DOWN:
+                        Log.e("aaa", "swiping direction=down");
+                        break;
+                    case ReItemTouchHelper.UP:
+                        Log.e("aaa", "swiping direction=up");
+                        break;
+                    case ReItemTouchHelper.LEFT:
+                        Log.e("aaa", "swiping direction=left");
+                        break;
+                    case ReItemTouchHelper.RIGHT:
+                        Log.e("aaa", "swiping direction=right");
+                        break;
+                }
+            }
+
+            @Override
+            public void onSwipedOut(RecyclerView.ViewHolder viewHolder, CardBean o, int direction) {
+                switch (direction) {
+                    case ReItemTouchHelper.DOWN:
+                        Toast.makeText(NormalActivity.this, "swipe down out", Toast.LENGTH_SHORT).show();
+                        break;
+                    case ReItemTouchHelper.UP:
+                        Toast.makeText(NormalActivity.this, "swipe up out ", Toast.LENGTH_SHORT).show();
+                        break;
+                    case ReItemTouchHelper.LEFT:
+                        Toast.makeText(NormalActivity.this, "swipe left out", Toast.LENGTH_SHORT).show();
+                        break;
+                    case ReItemTouchHelper.RIGHT:
+                        Toast.makeText(NormalActivity.this, "swipe right out", Toast.LENGTH_SHORT).show();
+                        break;
+                }
+            }
+
+            @Override
+            public void onSwipedClear() {
+                Toast.makeText(NormalActivity.this, "cards are consumed", Toast.LENGTH_SHORT).show();
+            }
+        });
+        CardTouchHelperCallback helperCallback = new CardTouchHelperCallback(mRecyclerView, list,setting);
+        mReItemTouchHelper = new ReItemTouchHelper(helperCallback);
+        CardLayoutManager layoutManager = new CardLayoutManager(mReItemTouchHelper, setting);
+        mRecyclerView.setLayoutManager(layoutManager);
+        CardAdapter cardAdapter = new CardAdapter(list);
+ 		mRecyclerView.setAdapter(cardAdapter);
+```
+
+----
+
+### `CardSetting`
+
+所有的参数变量都在`CardSetting`当中实现。
 
 上下左右滑动控制，默认四个方向都可以滑动：
 
@@ -139,13 +215,6 @@ mReItemTouchHelper.swipeManually(direction);
     }
 ```
 
+----
 
-
-项目中加入了RecyclerView，如果自己的项目中用到了，需要向底下一样:
-
-```java
-    compile ('lin.jerrylin0322.reswipecard:reswipecard:0.0.1')
-```
-
-
-
+如果有任何的问题，可以在 [Issues](https://github.com/JerryChan123/ReSwipeCard/issues)当中告诉我~

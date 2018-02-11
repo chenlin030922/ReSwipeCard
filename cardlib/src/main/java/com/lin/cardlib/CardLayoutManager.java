@@ -19,9 +19,9 @@ public class CardLayoutManager extends RecyclerView.LayoutManager {
 
     private final RecyclerView mRecyclerView;
     private final ReItemTouchHelper mItemTouchHelper;
-    private CardConfig mConfig;
+    private CardSetting mConfig;
 
-    public CardLayoutManager(@NonNull ReItemTouchHelper itemTouchHelper, CardConfig cardConfig) {
+    public CardLayoutManager(@NonNull ReItemTouchHelper itemTouchHelper, CardSetting cardConfig) {
         this.mRecyclerView = itemTouchHelper.getRecyclerView();
         this.mItemTouchHelper = itemTouchHelper;
         mConfig = cardConfig;

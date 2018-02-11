@@ -20,20 +20,17 @@ public class CardTouchHelperCallback<T> extends ReItemTouchHelper.Callback {
     private final RecyclerView mRecyclerView;
     private final List<T> mList;
     private OnSwipeCardListener<T> mListener;
-    private CardConfig mConfig;
+    private CardSetting mConfig;
 
-    public CardTouchHelperCallback(@NonNull RecyclerView recyclerView, @NonNull List<T> dataList, CardConfig cardConfig) {
+    public CardTouchHelperCallback(@NonNull RecyclerView recyclerView, @NonNull List<T> dataList, CardSetting cardConfig) {
         this.mRecyclerView = recyclerView;
         this.mList = dataList;
         mConfig = cardConfig;
+        mListener = mConfig.getListener();
     }
 
     public RecyclerView getRecyclerView() {
         return mRecyclerView;
-    }
-
-    public void setOnSwipedListener(OnSwipeCardListener<T> listener) {
-        this.mListener = listener;
     }
 
     @Override
@@ -79,7 +76,7 @@ public class CardTouchHelperCallback<T> extends ReItemTouchHelper.Callback {
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
         if (viewHolder.itemView instanceof SwipeTouchLayout) {
             ((SwipeTouchLayout) viewHolder.itemView).setSwipeTouchListener(null);
-        }else {
+        } else {
             viewHolder.itemView.setOnTouchListener(null);
         }
         int layoutPosition = viewHolder.getLayoutPosition();
@@ -190,7 +187,6 @@ public class CardTouchHelperCallback<T> extends ReItemTouchHelper.Callback {
         if (mListener != null && ratio != 0) {
             mListener.onSwiping(viewHolder, dX, dY, direction);
         }
-//        }
     }
 
     @Override

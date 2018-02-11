@@ -8,7 +8,7 @@ import com.lin.cardlib.utils.ReItemTouchHelper;
  * mail: linchen@sogou-inc.com
  */
 
-public class CardConfig {
+public class CardSetting {
     public static final int DEFAULT_SHOW_ITEM = 3;
 
     public static final float DEFAULT_SCALE = 0.1f;
@@ -16,6 +16,7 @@ public class CardConfig {
     public static final int DEFAULT_TRANSLATE = 14;
 
     public static final float DEFAULT_ROTATE_DEGREE = 15f;
+    private OnSwipeCardListener mListener;
 
     public int getShowCount() {
         return DEFAULT_SHOW_ITEM;
@@ -35,12 +36,12 @@ public class CardConfig {
 
     public int getSwipeDirection() {
         return ReItemTouchHelper.LEFT | ReItemTouchHelper.RIGHT
-                | ReItemTouchHelper.UP |  ReItemTouchHelper.DOWN;
+                | ReItemTouchHelper.UP | ReItemTouchHelper.DOWN;
     }
 
     public int couldSwipeOutDirection() {
         return ReItemTouchHelper.LEFT | ReItemTouchHelper.RIGHT
-                | ReItemTouchHelper.UP |  ReItemTouchHelper.DOWN;
+                | ReItemTouchHelper.UP | ReItemTouchHelper.DOWN;
     }
 
     public float getSwipeThreshold() {
@@ -60,7 +61,14 @@ public class CardConfig {
     }
 
     public int getStackDirection() {
-        return  ReItemTouchHelper.DOWN;
+        return ReItemTouchHelper.DOWN;
     }
 
+    public void setSwipeListener(OnSwipeCardListener listener) {
+        mListener = listener;
+    }
+
+    public OnSwipeCardListener getListener() {
+        return mListener;
+    }
 }
