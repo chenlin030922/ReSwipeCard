@@ -9,9 +9,10 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
+
 /**
  * @author yuqirong
- * modified by linchen
+ *         modified by linchen
  */
 
 public class CardLayoutManager extends RecyclerView.LayoutManager {
@@ -40,59 +41,64 @@ public class CardLayoutManager extends RecyclerView.LayoutManager {
         float defaultScale = mConfig.getCardScale();
         if (itemCount > showCount) {
             for (int position = showCount; position >= 0; position--) {
-                View view = recycler.getViewForPosition(position);
-                addView(view);
-                measureChildWithMargins(view, 0, 0);
-                int widthSpace = getWidth() - getDecoratedMeasuredWidth(view);
-                int heightSpace = getHeight() - getDecoratedMeasuredHeight(view);
-                layoutDecoratedWithMargins(view,
+                View layout = recycler.getViewForPosition(position);
+                if (!(layout instanceof SwipeTouchLayout)) {
+                    throw new IllegalArgumentException("pls use SwipeTouchLayout as root on your item xml");
+                }
+                layout.setClickable(true);
+                addView(layout);
+                measureChildWithMargins(layout, 0, 0);
+                int widthSpace = getWidth() - getDecoratedMeasuredWidth(layout);
+                int heightSpace = getHeight() - getDecoratedMeasuredHeight(layout);
+                layoutDecoratedWithMargins(layout,
                         widthSpace / 2, heightSpace / 2,
-                        widthSpace / 2 + getDecoratedMeasuredWidth(view),
-                        heightSpace / 2 + getDecoratedMeasuredHeight(view));
+                        widthSpace / 2 + getDecoratedMeasuredWidth(layout),
+                        heightSpace / 2 + getDecoratedMeasuredHeight(layout));
 
                 if (position == showCount) {
-                    view.setScaleX(1 - (position - 1) * defaultScale);
-                    view.setScaleY(1 - (position - 1) * defaultScale);
+                    layout.setScaleX(1 - (position - 1) * defaultScale);
+                    layout.setScaleY(1 - (position - 1) * defaultScale);
                     switch (mConfig.getStackDirection()) {
                         case ReItemTouchHelper.UP:
-                            view.setTranslationY(-(position - 1) * view.getMeasuredHeight() / mConfig.getCardTranslateDistance());
+                            layout.setTranslationY(-(position - 1) * layout.getMeasuredHeight() / mConfig.getCardTranslateDistance());
                             break;
                         case ReItemTouchHelper.RIGHT:
-                            view.setTranslationX((position - 1) * view.getMeasuredWidth() / mConfig.getCardTranslateDistance());
+                            layout.setTranslationX((position - 1) * layout.getMeasuredWidth() / mConfig.getCardTranslateDistance());
                             break;
                         case ReItemTouchHelper.LEFT:
-                            view.setTranslationX(-(position - 1) * view.getMeasuredWidth() / mConfig.getCardTranslateDistance());
+                            layout.setTranslationX(-(position - 1) * layout.getMeasuredWidth() / mConfig.getCardTranslateDistance());
                             break;
                         case ReItemTouchHelper.DOWN:
                         default:
-                            view.setTranslationY((position - 1) * view.getMeasuredHeight() / mConfig.getCardTranslateDistance());
+                            layout.setTranslationY((position - 1) * layout.getMeasuredHeight() / mConfig.getCardTranslateDistance());
                             break;
                     }
                 } else if (position > 0) {
-                    view.setScaleX(1 - position * defaultScale);
-                    view.setScaleY(1 - position * defaultScale);
+                    layout.setScaleX(1 - position * defaultScale);
+                    layout.setScaleY(1 - position * defaultScale);
                     switch (mConfig.getStackDirection()) {
                         case ReItemTouchHelper.UP:
-                            view.setTranslationY(-position * view.getMeasuredHeight() / mConfig.getCardTranslateDistance());
+                            layout.setTranslationY(-position * layout.getMeasuredHeight() / mConfig.getCardTranslateDistance());
                             break;
                         case ReItemTouchHelper.RIGHT:
-                            view.setTranslationX(position * view.getMeasuredWidth() / mConfig.getCardTranslateDistance());
+                            layout.setTranslationX(position * layout.getMeasuredWidth() / mConfig.getCardTranslateDistance());
                             break;
                         case ReItemTouchHelper.LEFT:
-                            view.setTranslationX(-position * view.getMeasuredWidth() / mConfig.getCardTranslateDistance());
+                            layout.setTranslationX(-position * layout.getMeasuredWidth() / mConfig.getCardTranslateDistance());
                             break;
                         case ReItemTouchHelper.DOWN:
                         default:
-                            view.setTranslationY(position * view.getMeasuredHeight() / mConfig.getCardTranslateDistance());
+                            layout.setTranslationY(position * layout.getMeasuredHeight() / mConfig.getCardTranslateDistance());
                             break;
                     }
                 } else {
-                    view.setOnTouchListener(mOnTouchListener);
+                    ((SwipeTouchLayout)layout).setSwipeTouchListener(mSwipeTouchListener);
                 }
             }
         } else {
             for (int position = itemCount - 1; position >= 0; position--) {
                 View view = recycler.getViewForPosition(position);
+                view.setClickable(true);
                 addView(view);
                 measureChildWithMargins(view, 0, 0);
                 int widthSpace = getWidth() - getDecoratedMeasuredWidth(view);
@@ -120,7 +126,11 @@ public class CardLayoutManager extends RecyclerView.LayoutManager {
                             break;
                     }
                 } else {
-                    view.setOnTouchListener(mOnTouchListener);
+                    if (view instanceof SwipeTouchLayout) {
+                        ((SwipeTouchLayout) view).setSwipeTouchListener(mSwipeTouchListener);
+                    } else {
+                        view.setOnTouchListener(mOnTouchListener);
+                    }
                 }
             }
         }
@@ -151,6 +161,23 @@ public class CardLayoutManager extends RecyclerView.LayoutManager {
                     return true;
             }
             return v.onTouchEvent(event);
+        }
+    };
+    private SwipeTouchLayout.SwipeTouchListener mSwipeTouchListener = new SwipeTouchLayout.SwipeTouchListener() {
+        @Override
+        public void onTouchDown(MotionEvent event) {
+
+        }
+
+        @Override
+        public void onTouchUp(MotionEvent event) {
+
+        }
+
+        @Override
+        public void onTouchMove(View v, MotionEvent event) {
+            RecyclerView.ViewHolder childViewHolder = mRecyclerView.getChildViewHolder(v);
+            mItemTouchHelper.startSwipe(childViewHolder);
         }
     };
 }

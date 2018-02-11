@@ -77,7 +77,11 @@ public class CardTouchHelperCallback<T> extends ReItemTouchHelper.Callback {
 
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-        viewHolder.itemView.setOnTouchListener(null);
+        if (viewHolder.itemView instanceof SwipeTouchLayout) {
+            ((SwipeTouchLayout) viewHolder.itemView).setSwipeTouchListener(null);
+        }else {
+            viewHolder.itemView.setOnTouchListener(null);
+        }
         int layoutPosition = viewHolder.getLayoutPosition();
         T remove = mList.remove(layoutPosition);
         if (mConfig.isLoopCard()) {
