@@ -23,9 +23,16 @@
 ### 使用方式
 
 ```java
-   dependencies {
+//项目中未使用RecyclerView  
+dependencies {
     compile ('lin.jerrylin0322.reswipecard:reswipecard:1.0.0')
 }
+//如果项目中使用了RecyclerView:
+dependencies {
+    compile ('lin.jerrylin0322.reswipecard:reswipecard:1.0.0') {
+                exclude module:'recyclerview-v7' }
+}
+
 ```
 
 maven:
