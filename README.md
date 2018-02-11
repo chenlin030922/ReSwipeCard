@@ -100,6 +100,23 @@ maven:
  		mRecyclerView.setAdapter(cardAdapter);
 ```
 
+在Adapter的item的xml中使用SwipeTouchLayout当做根布局:
+
+```java
+<?xml version="1.0" encoding="utf-8"?>
+<com.lin.cardlib.SwipeTouchLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                  xmlns:app="http://schemas.android.com/apk/res-auto"
+                                  android:layout_width="wrap_content"
+                                  android:layout_height="wrap_content"
+                                  android:paddingBottom="30dp">
+
+  ...
+
+</com.lin.cardlib.SwipeTouchLayout>
+```
+
+
+
 ----
 
 ### `CardSetting`
