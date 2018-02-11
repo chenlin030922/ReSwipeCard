@@ -242,3 +242,4 @@ mReItemTouchHelper.swipeManually(direction);
 ----
 
 如果有任何的问题，可以在 [Issues](https://github.com/JerryChan123/ReSwipeCard/issues)当中告诉我~
+或者E-mail:linchen0922@163.com
