@@ -2,7 +2,7 @@
 
 ReSwipeCard is based on [CardSwipeLayout](https://github.com/yuqirong/CardSwipeLayout)。
 
-[中文说明](https://github.com/JerryChan123/ReSwipeCard/blob/master/README-zh.md)
+[中文说明](https://github.com/JerryChan123/ReSwipeCard/blob/master/README_zh.md)
 
 #### Introduction：
 
