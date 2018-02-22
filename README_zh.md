@@ -1,37 +1,33 @@
 # ReSwipeCard
 
-ReSwipeCard is based on [CardSwipeLayout](https://github.com/yuqirong/CardSwipeLayout)。
+本项目是在 [CardSwipeLayout](https://github.com/yuqirong/CardSwipeLayout)的基础上进行的修改，感谢原作者。
 
-[中文说明](https://github.com/JerryChan123/ReSwipeCard/blob/master/README-zh.md)
+项目功能：
+- 解决滑动与点击事件冲突
+- 增加硬件加速支持
+- 滑动方向控制
+- 滑出方向控制
+- 滑出时间控制
+- 滑出阈值
+- 循环卡片
+- 卡片堆叠方式
+- 卡片数量
+- 增加手动滑动
 
-#### Introduction：
-
-- Solve the conflict between scroll and click
-
-
-- Hardware acceleration support
-- support for  defining  directions to slide
-- support for  defining  directions to slide out
-- support for defining durations to slide out
-- support for looping the card or not
-- support for defining the way to stack the cards
-- support for defining the numbers of the stacked card
-- support for sliding card automatically
-
-below is the demo of this projec ，you could install the app-debug.apk to see on the mobile：
+效果图如下所示，也可以直接下载跟根目录下的app-debug.apk查看：
 
 ![gif](https://github.com/JerryChan123/ReSwipeCard/blob/dev/pic/gif/normal.gif)
 
 -----
 
-### How to use:
+### 使用方式
 
 ```java
-//don't use RecyclerView on your project
+//项目中未使用RecyclerView  
 dependencies {
     compile ('lin.jerrylin0322.reswipecard:reswipecard:1.0.0')
 }
-//already use RecyclerView on your project
+//如果项目中使用了RecyclerView:
 dependencies {
     compile ('lin.jerrylin0322.reswipecard:reswipecard:1.0.0') {
                 exclude module:'recyclerview-v7' }
@@ -50,7 +46,7 @@ maven:
 </dependency>
 ```
 
-in Java：
+代码中：
 
 ```java
  CardSetting setting=new CardSetting();
@@ -104,7 +100,7 @@ in Java：
  		mRecyclerView.setAdapter(cardAdapter);
 ```
 
-You need to use SwipeTouchLayout as the root node in your adapter's xml item:
+在Adapter的item的xml中使用SwipeTouchLayout当做根布局:
 
 ```java
 <?xml version="1.0" encoding="utf-8"?>
@@ -125,9 +121,9 @@ You need to use SwipeTouchLayout as the root node in your adapter's xml item:
 
 ### `CardSetting`
 
-All parameters are defined on`CardSetting`.
+所有的参数变量都在`CardSetting`当中实现。
 
-The direction for sliding:
+上下左右滑动控制，默认四个方向都可以滑动：
 
 ```java
 public int getSwipeDirection() {
@@ -136,11 +132,11 @@ public int getSwipeDirection() {
     }
 ```
 
-If you don't need the left slide,just remove from the above,and the effect is like below：
+去掉左边滑动的效果图如图所示：
 
 ![gif](https://github.com/JerryChan123/ReSwipeCard/blob/dev/pic/gif/no_left_swipe.gif)
 
-The direction for sliding out:
+上下左右滑出控制，默认四个方向都可以滑出:
 
 ```java
     public int couldSwipeOutDirection() {
@@ -149,13 +145,13 @@ The direction for sliding out:
     }
 ```
 
-If you don't need the top slide out,just remove from the above,and the effect is like below：
+去掉垂直方向的滑出效果图如图所示：
 
 ![gif](https://github.com/JerryChan123/ReSwipeCard/blob/dev/pic/gif/no_swipe_out_vertical.gif)
 
 
 
-The way to stack the cards:
+修改卡片堆叠方式，默认为从下往上：
 
 ```java
 CardConfig.java
@@ -164,11 +160,11 @@ public int getStackDirection() {
     }
 ```
 
-All ways to stack the cards：
+效果图：
 
 ![Alt text](https://github.com/JerryChan123/ReSwipeCard/blob/dev/pic/img/card_stack.jpg)
 
-Whether needs to loop thr card
+是否循环，默认为循环：
 
 ```java
  public boolean isLoopCard() {
@@ -176,18 +172,18 @@ Whether needs to loop thr card
     }
 ```
 
-The example for not looping the card：
+去掉循环的效果如下图所示：
 
 ![gif](https://github.com/JerryChan123/ReSwipeCard/blob/dev/pic/gif/no_loop.gif)
 
-Sliding out the card automatically:
+自动滑动效果:
 
 ```java
 //direction=ReItemTouchHelper.LEFT or ReItemTouchHelper.RIGHT .etc
 mReItemTouchHelper.swipeManually(direction);
 ```
 
-The degressive scale value for every card(first card is 1f,second card is 0.9f ...)
+卡片缩放递减的值，默认为0.1f：
 
 ```java
     public float getCardScale() {
@@ -195,7 +191,7 @@ The degressive scale value for every card(first card is 1f,second card is 0.9f .
     }
 ```
 
-The count for show cards:
+卡片展示数量：
 
 ```java
   public int getShowCount() {
@@ -203,7 +199,7 @@ The count for show cards:
     }
 ```
 
-Max rotate value when sliding card:
+移动过程中最大卡片旋转值：
 
 ```java
    public float getCardRotateDegree() {
@@ -211,7 +207,7 @@ Max rotate value when sliding card:
     }
 ```
 
-The offset value for every card(first card is 0,second card is DEFAULT_TRANSLATE_Y,third card is DEFAULT_TRANSLATE_Y*2 ...)
+布局时卡片偏移量，第一张不偏移，随后递增，默认偏移量为14：
 
 ```java
  public int getCardTranslateDistance() {
@@ -219,7 +215,7 @@ The offset value for every card(first card is 0,second card is DEFAULT_TRANSLATE
     }
 ```
 
-Need to open the haveware acceleration:
+是否开启硬件加速：
 
 ```java
     public boolean enableHardWare() {
@@ -227,7 +223,7 @@ Need to open the haveware acceleration:
     }
 ```
 
-The duration for sliding out:
+控制滑出时间：
 
 ```java
     public int getSwipeOutAnimDuration() {
@@ -235,7 +231,7 @@ The duration for sliding out:
     }
 ```
 
-Decide the Distance for notifing the card to slided out，default is the RecyclerView's width'*0.3f：
+控制滑动可以滑出的阈值，默认是RecyclerView的宽度*0.3f：
 
 ```java
     public float getSwipeThreshold() {
@@ -245,4 +241,4 @@ Decide the Distance for notifing the card to slided out，default is the Recycle
 
 ----
 
-If you have any problem ,talk to me through [Issues](https://github.com/JerryChan123/ReSwipeCard/issues)
+如果有任何的问题，可以在 [Issues](https://github.com/JerryChan123/ReSwipeCard/issues)当中告诉我~
