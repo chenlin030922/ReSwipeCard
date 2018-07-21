@@ -22,6 +22,12 @@ public class CardTouchHelperCallback<T> extends ReItemTouchHelper.Callback {
     private OnSwipeCardListener<T> mListener;
     private CardSetting mConfig;
 
+    /**
+     * The variable controls the button {@link ReItemTouchHelper#swipeManually(int)}
+     * Allows not to use the button ahead of time
+     */
+    private boolean switchListener = true;
+
     public CardTouchHelperCallback(@NonNull RecyclerView recyclerView, @NonNull List<T> dataList, CardSetting cardConfig) {
         this.mRecyclerView = recyclerView;
         this.mList = dataList;
@@ -81,6 +87,7 @@ public class CardTouchHelperCallback<T> extends ReItemTouchHelper.Callback {
         }
         int layoutPosition = viewHolder.getLayoutPosition();
         T remove = mList.remove(layoutPosition);
+        switchListener = true;
         if (mConfig.isLoopCard()) {
             mList.add(remove);
         }
@@ -187,6 +194,16 @@ public class CardTouchHelperCallback<T> extends ReItemTouchHelper.Callback {
         if (mListener != null && ratio != 0) {
             mListener.onSwiping(viewHolder, dX, dY, direction);
         }
+    }
+
+    @Override
+    public void setSwitchListener(boolean switchListener) {
+        this.switchListener = switchListener;
+    }
+
+    @Override
+    public boolean getSwitchListener() {
+        return switchListener;
     }
 
     @Override
