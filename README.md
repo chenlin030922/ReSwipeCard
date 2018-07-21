@@ -1,5 +1,7 @@
 # ReSwipeCard
 
+> plz start the project if u feel nice xD
+
 ReSwipeCard is based on [CardSwipeLayout](https://github.com/yuqirong/CardSwipeLayout)。
 
 [中文说明](https://github.com/JerryChan123/ReSwipeCard/blob/master/README_zh.md)
