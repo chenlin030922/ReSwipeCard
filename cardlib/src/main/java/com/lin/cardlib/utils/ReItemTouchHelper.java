@@ -140,7 +140,6 @@ public class ReItemTouchHelper extends RecyclerView.ItemDecoration
 
     RecyclerView mRecyclerView;
 
-
     final Runnable mScrollRunnable = new Runnable() {
         @Override
         public void run() {
@@ -564,39 +563,44 @@ public class ReItemTouchHelper extends RecyclerView.ItemDecoration
     }
 
     public void swipeManually(int direction) {
-        //find the first card
-        ViewHolder viewHolder = mRecyclerView.findViewHolderForLayoutPosition(0);
-        if (!hasRunningRecoverAnim()) {
-            //reset to zero,make a fake mDx,mDy
-            int addValue = 50;
-            isManually = true;
-            switch (direction) {
-                case DOWN:
-                    mDx = 0;
-                    mDy = mRecyclerView.getHeight() * mCallback
-                            .getSwipeThreshold(viewHolder) + addValue;
-                    break;
-                case RIGHT:
-                    mDy = 0;
-                    mDx = (mRecyclerView.getWidth() * mCallback
-                            .getSwipeThreshold(viewHolder) + addValue);
-                    break;
-                case LEFT:
-                    mDy = 0;
-                    mDx = -(mRecyclerView.getWidth() * mCallback
-                            .getSwipeThreshold(viewHolder) + addValue);
-                    break;
-                case UP:
-                    mDx = 0;
-                    mDy = -(mRecyclerView.getHeight() * mCallback
-                            .getSwipeThreshold(viewHolder) + addValue);
-                    break;
+        //Check to avoid error with moving cards
+        if (mCallback.getSwitchListener()){
+            mCallback.setSwitchListener(false);
+            //find the first card
+            ViewHolder viewHolder = mRecyclerView.findViewHolderForLayoutPosition(0);
+            if (!hasRunningRecoverAnim()) {
+                //reset to zero,make a fake mDx,mDy
+                int addValue = 50;
+                isManually = true;
+                switch (direction) {
+                    case DOWN:
+                        mDx = 0;
+                        mDy = mRecyclerView.getHeight() * mCallback
+                                .getSwipeThreshold(viewHolder) + addValue;
+                        break;
+                    case RIGHT:
+                        mDy = 0;
+                        mDx = (mRecyclerView.getWidth() * mCallback
+                                .getSwipeThreshold(viewHolder) + addValue);
+                        break;
+                    case LEFT:
+                        mDy = 0;
+                        mDx = -(mRecyclerView.getWidth() * mCallback
+                                .getSwipeThreshold(viewHolder) + addValue);
+                        break;
+                    case UP:
+                        mDx = 0;
+                        mDy = -(mRecyclerView.getHeight() * mCallback
+                                .getSwipeThreshold(viewHolder) + addValue);
+                        break;
 
+                }
+                mSelected = viewHolder;
+                select(null, ACTION_STATE_IDLE);
+                mActivePointerId = ACTIVE_POINTER_ID_NONE;
             }
-            mSelected = viewHolder;
-            select(null, ACTION_STATE_IDLE);
-            mActivePointerId = ACTIVE_POINTER_ID_NONE;
         }
+
     }
 
 
@@ -1570,6 +1574,10 @@ public class ReItemTouchHelper extends RecyclerView.ItemDecoration
             }
             return value;
         }
+
+        public abstract void setSwitchListener(boolean switchListener);
+
+        public abstract boolean getSwitchListener();
     }
 
 
