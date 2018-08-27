@@ -6,7 +6,7 @@
 
 #### 版本日志
 
-> 修复[bug](https://github.com/JerryChan123/ReSwipeCard/issues/1)
+> 1.0.1：修复[bug](https://github.com/JerryChan123/ReSwipeCard/issues/1)
 
 项目功能：
 - 解决滑动与点击事件冲突
