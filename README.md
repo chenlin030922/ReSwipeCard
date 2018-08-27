@@ -5,7 +5,7 @@
 
 #### version log
 
-> 1.0.1 ：fix the [bug](https://github.com/JerryChan123/ReSwipeCard/issues/1)
+> 1.0.1 ：fix some  bugs
 
 
 
