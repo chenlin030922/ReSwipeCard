@@ -28,7 +28,7 @@ publish {
     userOrg = 'jerrylin0322'
     groupId = 'lin.jerrylin0322.reswipecard'
     artifactId = 'reswipecard'
-    publishVersion = '1.0.0'
+    publishVersion = '1.0.1'
     desc = 'a library for swipe card'
     website = 'https://github.com/JerryChan123/ReSwipeCard'
 }
