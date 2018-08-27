@@ -4,6 +4,10 @@
 
 本项目是在 [CardSwipeLayout](https://github.com/yuqirong/CardSwipeLayout)的基础上进行的修改，感谢原作者。
 
+#### 版本日志
+
+> 修复[bug](https://github.com/JerryChan123/ReSwipeCard/issues/1)
+
 项目功能：
 - 解决滑动与点击事件冲突
 - 增加硬件加速支持
@@ -27,11 +31,11 @@
 ```java
 //项目中未使用RecyclerView  
 dependencies {
-    compile ('lin.jerrylin0322.reswipecard:reswipecard:1.0.0')
+    compile ('lin.jerrylin0322.reswipecard:reswipecard:1.0.1')
 }
 //如果项目中使用了RecyclerView:
 dependencies {
-    compile ('lin.jerrylin0322.reswipecard:reswipecard:1.0.0') {
+    compile ('lin.jerrylin0322.reswipecard:reswipecard:1.0.1') {
                 exclude module:'recyclerview-v7' }
 }
 
@@ -43,7 +47,7 @@ maven:
 <dependency>
   <groupId>lin.jerrylin0322.reswipecard</groupId>
   <artifactId>reswipecard</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1</version>
   <type>pom</type>
 </dependency>
 ```
