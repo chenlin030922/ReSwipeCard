@@ -2,6 +2,15 @@
 
 > plz start the project if u feel nice xD
 
+
+#### version log
+
+> 1.0.1 ：fix the [bug](https://github.com/JerryChan123/ReSwipeCard/issues/1)
+
+
+
+
+
 ReSwipeCard is based on [CardSwipeLayout](https://github.com/yuqirong/CardSwipeLayout)。
 
 [中文说明](https://github.com/JerryChan123/ReSwipeCard/blob/master/README_zh.md)
@@ -31,11 +40,11 @@ below is the demo of this projec ，you could install the app-debug.apk to see o
 ```java
 //don't use RecyclerView on your project
 dependencies {
-    compile ('lin.jerrylin0322.reswipecard:reswipecard:1.0.0')
+    compile ('lin.jerrylin0322.reswipecard:reswipecard:1.0.1')
 }
 //already use RecyclerView on your project
 dependencies {
-    compile ('lin.jerrylin0322.reswipecard:reswipecard:1.0.0') {
+    compile ('lin.jerrylin0322.reswipecard:reswipecard:1.0.1') {
                 exclude module:'recyclerview-v7' }
 }
 
@@ -47,7 +56,7 @@ maven:
 <dependency>
   <groupId>lin.jerrylin0322.reswipecard</groupId>
   <artifactId>reswipecard</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1</version>
   <type>pom</type>
 </dependency>
 ```
