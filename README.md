@@ -20,7 +20,6 @@ ReSwipeCard is based on [CardSwipeLayout](https://github.com/yuqirong/CardSwipeL
 - Solve the conflict between scroll and click
 
 
-- Hardware acceleration support
 - support for  defining  directions to slide
 - support for  defining  directions to slide out
 - support for defining durations to slide out
