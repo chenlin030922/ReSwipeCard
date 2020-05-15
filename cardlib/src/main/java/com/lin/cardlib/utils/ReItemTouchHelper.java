@@ -184,6 +184,9 @@ public class ReItemTouchHelper extends RecyclerView.ItemDecoration
             }
             final int action = MotionEventCompat.getActionMasked(event);
             if (action == MotionEvent.ACTION_DOWN) {
+                if (recyclerView.getAdapter() != null && recyclerView.getAdapter().getItemCount() > 0) {
+                    recyclerView.getParent().requestDisallowInterceptTouchEvent(true);
+                }
                 mActivePointerId = event.getPointerId(0);
                 mInitialTouchX = event.getX();
                 mInitialTouchY = event.getY();
@@ -202,6 +205,7 @@ public class ReItemTouchHelper extends RecyclerView.ItemDecoration
                     }
                 }
             } else if (action == MotionEvent.ACTION_CANCEL || action == MotionEvent.ACTION_UP) {
+                recyclerView.getParent().requestDisallowInterceptTouchEvent(false);
                 mActivePointerId = ACTIVE_POINTER_ID_NONE;
                 select(null, ACTION_STATE_IDLE);
             } else if (mActivePointerId != ACTIVE_POINTER_ID_NONE) {
