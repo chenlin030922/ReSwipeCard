@@ -1,5 +1,7 @@
 # ReSwipeCard
 
+> **This project is no longer maintained, feel free to pull request if you have some fixs.**
+
 > plz start the project if u feel nice xD
 
 
