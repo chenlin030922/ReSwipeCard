@@ -1,5 +1,7 @@
 # ReSwipeCard
 
+这个项目不再维护了，想发pr的朋友表示欢迎
+
 > 觉得还行给个小星星不
 
 本项目是在 [CardSwipeLayout](https://github.com/yuqirong/CardSwipeLayout)的基础上进行的修改，感谢原作者。
